@@ -1,0 +1,796 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎮 Panel Admin - Control de Proyectos</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #00d9ff;
+            --success: #00ff41;
+            --danger: #ff006e;
+            --warning: #ff6b00;
+            --dark: #0a0a0a;
+            --card-bg: #1a1a1a;
+            --gray: #2a2a2a;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--dark);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            background-image: 
+                radial-gradient(circle at 20% 50%, rgba(0, 217, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(0, 255, 65, 0.1) 0%, transparent 50%);
+        }
+
+        /* Login Screen */
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--dark);
+            z-index: 9999;
+        }
+
+        .login-box {
+            background: var(--card-bg);
+            padding: 50px 40px;
+            border-radius: 20px;
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .login-logo {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 0 20px rgba(0, 217, 255, 0.5));
+        }
+
+        .login-title {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, var(--primary), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .login-subtitle {
+            color: #888;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: #ccc;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px rgba(0, 217, 255, 0.3);
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, var(--primary), var(--success));
+            border: none;
+            border-radius: 8px;
+            color: #000;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-2px);
+        }
+
+        .error-msg {
+            background: rgba(255, 0, 110, 0.2);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        /* Main Panel */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: none;
+        }
+
+        .container.active {
+            display: block;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(0, 217, 255, 0.1) 0%, rgba(0, 255, 65, 0.1) 100%);
+            border-radius: 15px;
+            border: 1px solid rgba(0, 217, 255, 0.2);
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .header-left h1 {
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .user-info {
+            padding: 10px 20px;
+            background: rgba(0, 217, 255, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(0, 217, 255, 0.3);
+        }
+
+        .btn-logout {
+            padding: 10px 20px;
+            background: rgba(255, 0, 110, 0.2);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-logout:hover {
+            background: rgba(255, 0, 110, 0.3);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--gray);
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: #888;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .proyecto {
+            background: var(--card-bg);
+            padding: 30px;
+            margin-bottom: 25px;
+            border-radius: 15px;
+            border-left: 5px solid;
+        }
+
+        .proyecto.activo {
+            border-left-color: var(--success);
+        }
+
+        .proyecto.inactivo {
+            border-left-color: var(--danger);
+        }
+
+        .proyecto-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .proyecto-titulo {
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge.activo {
+            background: rgba(0, 255, 65, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .badge.inactivo {
+            background: rgba(255, 0, 110, 0.2);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+
+        .proyecto-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-item {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+        }
+
+        .info-label {
+            color: #888;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .controles {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-activar {
+            background: linear-gradient(135deg, var(--success), #00cc33);
+            color: #000;
+        }
+
+        .btn-desactivar {
+            background: linear-gradient(135deg, var(--danger), #cc0055);
+            color: #fff;
+        }
+
+        .btn-tiempo {
+            background: linear-gradient(135deg, var(--primary), #0080ff);
+            color: #fff;
+        }
+
+        .btn-editar {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 15px;
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .tiempo-selector {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+
+        .tiempo-option {
+            padding: 15px;
+            background: rgba(0, 217, 255, 0.1);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tiempo-option:hover {
+            background: rgba(0, 217, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .proyecto-header {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-container" id="loginScreen">
+        <div class="login-box">
+            <div class="login-logo">🎮</div>
+            <h1 class="login-title">Panel Admin</h1>
+            <p class="login-subtitle">Control de Proyectos Web</p>
+            
+            <form id="loginForm" onsubmit="return login(event)">
+                <div class="form-group">
+                    <label class="form-label">Usuario</label>
+                    <input type="text" id="username" class="form-input" placeholder="Ingresa tu usuario" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">Contraseña</label>
+                    <input type="password" id="password" class="form-input" placeholder="Ingresa tu contraseña" required>
+                </div>
+                
+                <button type="submit" class="btn-login">🔓 Acceder</button>
+                
+                <div class="error-msg" id="errorMsg">
+                    ❌ Usuario o contraseña incorrectos
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Panel -->
+    <div class="container" id="mainPanel">
+        <header>
+            <div class="header-left">
+                <h1>🎮 Panel de Control de Proyectos</h1>
+                <p style="color: #888;">Sistema de gestión y protección</p>
+            </div>
+            <div class="header-right">
+                <div class="user-info">
+                    👤 Usuario: <strong id="currentUser">TORRES</strong>
+                </div>
+                <button class="btn-logout" onclick="logout()">🚪 Cerrar Sesión</button>
+            </div>
+        </header>
+
+        <div class="stats" id="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="total-proyectos">0</div>
+                <div class="stat-label">Total Proyectos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" style="color: var(--success);" id="activos">0</div>
+                <div class="stat-label">Activos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" style="color: var(--danger);" id="inactivos">0</div>
+                <div class="stat-label">Inactivos</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" style="color: var(--warning);" id="sin-pagar">0</div>
+                <div class="stat-label">Sin Pagar</div>
+            </div>
+        </div>
+
+        <div id="proyectos-lista"></div>
+    </div>
+
+    <!-- Modal para agregar tiempo -->
+    <div class="modal" id="modalTiempo">
+        <div class="modal-content">
+            <h2 class="modal-title">⏰ Agregar Tiempo</h2>
+            <p style="color: #888; margin-bottom: 20px;">Selecciona cuánto tiempo agregar a <strong id="proyectoNombre"></strong></p>
+            
+            <div class="tiempo-selector">
+                <div class="tiempo-option" onclick="agregarTiempo(7)">
+                    <div style="font-size: 2rem;">📅</div>
+                    <div>7 días</div>
+                </div>
+                <div class="tiempo-option" onclick="agregarTiempo(15)">
+                    <div style="font-size: 2rem;">📅</div>
+                    <div>15 días</div>
+                </div>
+                <div class="tiempo-option" onclick="agregarTiempo(30)">
+                    <div style="font-size: 2rem;">📅</div>
+                    <div>1 mes</div>
+                </div>
+                <div class="tiempo-option" onclick="agregarTiempo(60)">
+                    <div style="font-size: 2rem;">📅</div>
+                    <div>2 meses</div>
+                </div>
+                <div class="tiempo-option" onclick="agregarTiempo(90)">
+                    <div style="font-size: 2rem;">📅</div>
+                    <div>3 meses</div>
+                </div>
+                <div class="tiempo-option" onclick="agregarTiempo(180)">
+                    <div style="font-size: 2rem;">📅</div>
+                    <div>6 meses</div>
+                </div>
+            </div>
+
+            <div style="margin-top: 20px;">
+                <label class="form-label">O ingresa días personalizados:</label>
+                <input type="number" id="diasCustom" class="form-input" placeholder="Ej: 45" min="1">
+            </div>
+
+            <div class="modal-buttons">
+                <button class="btn btn-tiempo" onclick="agregarTiempoCustom()">✓ Confirmar</button>
+                <button class="btn btn-editar" onclick="cerrarModal()">✗ Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // CONFIGURACIÓN DE SEGURIDAD
+        // ============================================
+        
+        // Credenciales (ofuscadas con Base64)
+        const AUTH = {
+            // Usuario: TORRES (Base64)
+            user: atob('VE9SUkVT'),
+            // Contraseña: TU_CONTRASEÑA_SEGURA_123 (Base64) - CÁMBIALA!
+            pass: atob('VFVfQ09OVFJBU0VOQl9TRUdVUkFfMTIz')
+        };
+
+        // ============================================
+        // SISTEMA DE AUTENTICACIÓN
+        // ============================================
+        
+        let proyectosData = null;
+        let proyectoActual = null;
+
+        // Verificar si ya hay sesión activa
+        window.addEventListener('DOMContentLoaded', function() {
+            const sesion = sessionStorage.getItem('admin_logged');
+            if (sesion === 'true') {
+                mostrarPanel();
+            }
+        });
+
+        function login(event) {
+            event.preventDefault();
+            
+            const usuario = document.getElementById('username').value;
+            const contraseña = document.getElementById('password').value;
+            
+            // Verificar credenciales
+            if (usuario === AUTH.user && contraseña === AUTH.pass) {
+                sessionStorage.setItem('admin_logged', 'true');
+                mostrarPanel();
+                return false;
+            }
+            
+            // Error
+            document.getElementById('errorMsg').style.display = 'block';
+            document.getElementById('password').value = '';
+            
+            setTimeout(() => {
+                document.getElementById('errorMsg').style.display = 'none';
+            }, 3000);
+            
+            return false;
+        }
+
+        function logout() {
+            sessionStorage.removeItem('admin_logged');
+            document.getElementById('loginScreen').style.display = 'flex';
+            document.getElementById('mainPanel').classList.remove('active');
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+        }
+
+        function mostrarPanel() {
+            document.getElementById('loginScreen').style.display = 'none';
+            document.getElementById('mainPanel').classList.add('active');
+            cargarProyectos();
+        }
+
+        // ============================================
+        // GESTIÓN DE PROYECTOS
+        // ============================================
+
+        function cargarProyectos() {
+            fetch('proyectos.json?t=' + Date.now())
+                .then(r => r.json())
+                .then(data => {
+                    proyectosData = data;
+                    renderProyectos(data);
+                    actualizarEstadisticas(data);
+                })
+                .catch(error => {
+                    alert('⚠️ Error al cargar proyectos: ' + error.message);
+                });
+        }
+
+        function renderProyectos(proyectos) {
+            const lista = document.getElementById('proyectos-lista');
+            lista.innerHTML = '';
+
+            for (let [id, proyecto] of Object.entries(proyectos)) {
+                const expira = new Date(proyecto.expira);
+                const hoy = new Date();
+                const diasRestantes = Math.ceil((expira - hoy) / (1000 * 60 * 60 * 24));
+                
+                const div = document.createElement('div');
+                div.className = `proyecto ${proyecto.activo ? 'activo' : 'inactivo'}`;
+                div.innerHTML = `
+                    <div class="proyecto-header">
+                        <div>
+                            <div class="proyecto-titulo">${proyecto.nombre}</div>
+                            <div style="color: #888; margin-top: 5px;">Cliente: ${proyecto.cliente} • ID: ${id}</div>
+                        </div>
+                        <span class="badge ${proyecto.activo ? 'activo' : 'inactivo'}">
+                            ${proyecto.activo ? '✅ Activo' : '❌ Inactivo'}
+                        </span>
+                    </div>
+
+                    <div class="proyecto-info">
+                        <div class="info-item">
+                            <div class="info-label">💰 Precio</div>
+                            <div class="info-value">${proyecto.precio}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">💳 Estado Pago</div>
+                            <div class="info-value" style="color: ${proyecto.pagado ? 'var(--success)' : 'var(--danger)'};">
+                                ${proyecto.pagado ? 'Pagado ✓' : 'Pendiente ✗'}
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">📅 Expira</div>
+                            <div class="info-value">
+                                ${proyecto.expira}
+                                <div style="font-size: 0.85rem; color: ${diasRestantes <= 7 ? 'var(--warning)' : '#888'};">
+                                    ${diasRestantes > 0 ? `(${diasRestantes} días restantes)` : '(Expirado)'}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">🔄 Actualizado</div>
+                            <div class="info-value">${proyecto.ultima_actualizacion}</div>
+                        </div>
+                    </div>
+
+                    <div class="controles">
+                        <button class="btn ${proyecto.activo ? 'btn-desactivar' : 'btn-activar'}" 
+                                onclick="toggleActivacion('${id}', ${!proyecto.activo})">
+                            ${proyecto.activo ? '🔴 Desactivar Sitio' : '🟢 Activar Sitio'}
+                        </button>
+                        
+                        <button class="btn btn-tiempo" onclick="abrirModalTiempo('${id}')">
+                            ⏰ Agregar Tiempo
+                        </button>
+                        
+                        <button class="btn btn-editar" onclick="togglePago('${id}', ${!proyecto.pagado})">
+                            ${proyecto.pagado ? '💳 Marcar No Pagado' : '💰 Marcar Pagado'}
+                        </button>
+                        
+                        <a href="${proyecto.url_demo}" class="btn btn-editar" target="_blank" style="text-decoration: none;">
+                            🌐 Ver Sitio
+                        </a>
+                    </div>
+                `;
+                lista.appendChild(div);
+            }
+        }
+
+        function actualizarEstadisticas(proyectos) {
+            const total = Object.keys(proyectos).length;
+            let activos = 0, inactivos = 0, sinPagar = 0;
+
+            for (let p of Object.values(proyectos)) {
+                if (p.activo) activos++; else inactivos++;
+                if (!p.pagado) sinPagar++;
+            }
+
+            document.getElementById('total-proyectos').textContent = total;
+            document.getElementById('activos').textContent = activos;
+            document.getElementById('inactivos').textContent = inactivos;
+            document.getElementById('sin-pagar').textContent = sinPagar;
+        }
+
+        // ============================================
+        // FUNCIONES DE CONTROL
+        // ============================================
+
+        function toggleActivacion(id, nuevoEstado) {
+            const proyecto = proyectosData[id];
+            const accion = nuevoEstado ? 'activar' : 'desactivar';
+            
+            if (confirm(`¿Estás seguro de ${accion} el sitio "${proyecto.nombre}"?`)) {
+                proyectosData[id].activo = nuevoEstado;
+                proyectosData[id].ultima_actualizacion = new Date().toISOString().split('T')[0];
+                guardarCambios();
+            }
+        }
+
+        function togglePago(id, nuevoPago) {
+            proyectosData[id].pagado = nuevoPago;
+            proyectosData[id].ultima_actualizacion = new Date().toISOString().split('T')[0];
+            guardarCambios();
+        }
+
+        function abrirModalTiempo(id) {
+            proyectoActual = id;
+            document.getElementById('proyectoNombre').textContent = proyectosData[id].nombre;
+            document.getElementById('modalTiempo').classList.add('active');
+        }
+
+        function cerrarModal() {
+            document.getElementById('modalTiempo').classList.remove('active');
+            document.getElementById('diasCustom').value = '';
+        }
+
+        function agregarTiempo(dias) {
+            if (!proyectoActual) return;
+            
+            const proyecto = proyectosData[proyectoActual];
+            const fechaActual = new Date(proyecto.expira);
+            fechaActual.setDate(fechaActual.getDate() + dias);
+            
+            proyectosData[proyectoActual].expira = fechaActual.toISOString().split('T')[0];
+            proyectosData[proyectoActual].ultima_actualizacion = new Date().toISOString().split('T')[0];
+            
+            cerrarModal();
+            guardarCambios();
+            
+            alert(`✅ Se agregaron ${dias} días a ${proyecto.nombre}\nNueva fecha: ${fechaActual.toLocaleDateString('es-ES')}`);
+        }
+
+        function agregarTiempoCustom() {
+            const dias = parseInt(document.getElementById('diasCustom').value);
+            if (dias && dias > 0) {
+                agregarTiempo(dias);
+            } else {
+                alert('⚠️ Ingresa un número válido de días');
+            }
+        }
+
+        function guardarCambios() {
+            const jsonStr = JSON.stringify(proyectosData, null, 2);
+            
+            // Mostrar instrucciones para actualizar
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 700px;">
+                    <h2 class="modal-title">📝 Actualizar proyectos.json</h2>
+                    <p style="color: #888; margin-bottom: 20px;">
+                        Copia este contenido y actualiza el archivo <strong>proyectos.json</strong> en tu repositorio de GitHub:
+                    </p>
+                    <textarea id="jsonOutput" style="width: 100%; height: 300px; background: #000; color: #0f0; 
+                        padding: 15px; border-radius: 8px; border: 1px solid #333; font-family: monospace; 
+                        font-size: 0.9rem;" readonly>${jsonStr}</textarea>
+                    <div class="modal-buttons" style="margin-top: 20px;">
+                        <button class="btn btn-tiempo" onclick="copiarJSON()">📋 Copiar al Portapapeles</button>
+                        <button class="btn btn-editar" onclick="cerrarModalGuardar()">✓ Cerrar</button>
+                    </div>
+                    <p style="color: #666; font-size: 0.85rem; margin-top: 15px;">
+                        💡 Los cambios se aplicarán en 1-2 minutos después de actualizar el archivo en GitHub
+                    </p>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function copiarJSON() {
+            const textarea = document.getElementById('jsonOutput');
+            textarea.select();
+            document.execCommand('copy');
+            alert('✅ JSON copiado al portapapeles');
+        }
+
+        function cerrarModalGuardar() {
+            const modal = document.querySelector('.modal.active:last-of-type');
+            if (modal) modal.remove();
+            cargarProyectos(); // Recargar para mostrar cambios
+        }
+    </script>
+</body>
+</html>
