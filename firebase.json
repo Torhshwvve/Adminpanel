@@ -1,26 +1,30 @@
 {
   "proyectos": {
-    "emerson_hacks": {
-      "nombre": "Emerson Hacks",
-      "cliente": "Por definir",
-      "activo": true,
-      "expira": "2026-03-14",
-      "precio": "$15 USD",
-      "pagado": true,
-      "ultima_actualizacion": "2026-02-12",
-      "url_demo": "https://torhshwvve.github.io/emersonhacks/",
-      "tipo": "Mods Gaming & Social Services"
-    },
     "modsljak_victor": {
-      "nombre": "MODSLJAK - VicleyStore",
-      "cliente": "Por definir",
+      "nombre": "MODSLJAK Victor",
+      "cliente": "Victor",
+      "url_demo": "https://torhshwvve.github.io/VicleyStore/",
+      "precio": "$20/mes",
+      "expira": "2026-03-15",
       "activo": true,
-      "expira": "2026-03-14",
-      "precio": "$15 USD",
       "pagado": true,
-      "ultima_actualizacion": "2026-02-12",
-      "url_demo": "https://torhshwvve.github.io/VicleyStore",
-      "tipo": "Mods Gaming Premium"
+      "mantenimiento": false,
+      "ultima_actualizacion": "2026-02-13",
+      "clics_compra": 0,
+      "clics_por_dia": {}
+    },
+    "modsljak_emerson": {
+      "nombre": "EMERSON HACKS",
+      "cliente": "Emerson",
+      "url_demo": "https://torhshwvve.github.io/emersonhacks/",
+      "precio": "$20/mes",
+      "expira": "2026-03-15",
+      "activo": true,
+      "pagado": true,
+      "mantenimiento": false,
+      "ultima_actualizacion": "2026-02-13",
+      "clics_compra": 0,
+      "clics_por_dia": {}
     }
   }
 }
