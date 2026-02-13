@@ -1432,7 +1432,7 @@
                     "clics_compra": 0,
                     "clics_por_dia": {}
                 },
-                "modsljak_emerson": {
+                "emerson_hacks": {
                     "nombre": "EMERSON HACKS",
                     "cliente": "Emerson",
                     "url_demo": "https://torhshwvve.github.io/emersonhacks/",
@@ -1489,6 +1489,19 @@
             lista.innerHTML = '';
 
             for (let [id, proyecto] of Object.entries(proyectos)) {
+                // 🔥 FILTRAR PROYECTOS INVÁLIDOS O FANTASMA
+                // Ignorar proyectos con cliente "undefined", nombres inválidos, o IDs incorrectos
+                // Aceptar solo: modsljak_* (Victor) o emerson_* (Emerson)
+                const esIDValido = id.startsWith('modsljak_') || id.startsWith('emerson_');
+                
+                if (!proyecto || 
+                    !proyecto.nombre || 
+                    proyecto.nombre === 'undefined' ||
+                    proyecto.cliente === 'undefined' ||
+                    !esIDValido) {
+                    console.warn('⚠️ Proyecto inválido ignorado:', id, proyecto);
+                    continue; // Saltar este proyecto
+                }
                 const expira = new Date(proyecto.expira);
                 const hoy = new Date();
                 const diasRestantes = Math.ceil((expira - hoy) / (1000 * 60 * 60 * 24));
@@ -1578,10 +1591,17 @@
         }
 
         function actualizarEstadisticas(proyectos) {
-            const total = Object.keys(proyectos).length;
+            // 🔥 FILTRAR PROYECTOS INVÁLIDOS
+            const proyectosValidos = Object.entries(proyectos).filter(([id, p]) => {
+                const esIDValido = id.startsWith('modsljak_') || id.startsWith('emerson_');
+                return p && p.nombre && p.nombre !== 'undefined' && 
+                       p.cliente !== 'undefined' && esIDValido;
+            });
+            
+            const total = proyectosValidos.length;
             let activos = 0, inactivos = 0, sinPagar = 0, enMantenimiento = 0, totalClicks = 0;
 
-            for (let [id, p] of Object.entries(proyectos)) {
+            for (let [id, p] of proyectosValidos) {
                 if (p.activo) activos++; else inactivos++;
                 if (!p.pagado) sinPagar++;
                 if (p.mantenimiento) enMantenimiento++;
@@ -1798,7 +1818,14 @@
             const hoy = new Date();
             const alertas = [];
             
-            for (let [id, proyecto] of Object.entries(proyectosData)) {
+            // 🔥 FILTRAR PROYECTOS INVÁLIDOS
+            const proyectosValidos = Object.entries(proyectosData).filter(([id, p]) => {
+                const esIDValido = id.startsWith('modsljak_') || id.startsWith('emerson_');
+                return p && p.nombre && p.nombre !== 'undefined' && 
+                       p.cliente !== 'undefined' && esIDValido;
+            });
+            
+            for (let [id, proyecto] of proyectosValidos) {
                 const expira = new Date(proyecto.expira);
                 const dias = Math.ceil((expira - hoy) / (1000 * 60 * 60 * 24));
                 
@@ -1876,7 +1903,13 @@
             const container = document.getElementById('analytics-container');
             container.innerHTML = '';
 
-            const entries = Object.entries(proyectosData);
+            // 🔥 FILTRAR PROYECTOS INVÁLIDOS
+            const entries = Object.entries(proyectosData).filter(([id, p]) => {
+                const esIDValido = id.startsWith('modsljak_') || id.startsWith('emerson_');
+                return p && p.nombre && p.nombre !== 'undefined' && 
+                       p.cliente !== 'undefined' && esIDValido;
+            });
+            
             if (entries.length === 0) {
                 container.innerHTML = '<p style="color:#888;text-align:center;padding:20px;">Sin proyectos</p>';
                 return;
