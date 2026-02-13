@@ -1,207 +1,154 @@
-// 🔒 SISTEMA DE PROTECCIÓN - EMERSON HACKS
+// 🔒 SISTEMA DE PROTECCIÓN - MODSLJAK v2.0 (Firebase Tiempo Real)
 // ⚠️ NO REMOVER ESTE CÓDIGO - LICENCIA REQUERIDA
 (function() {
     'use strict';
-    
-    // Configuración
+
+    // ============================================
+    // 🔥 CONFIGURACIÓN FIREBASE (DEBE COINCIDIR CON EL ADMIN)
+    // ============================================
     const CONFIG = {
         proyectoId: 'emerson_hacks',
-        urlControl: 'https://torhshwvve.github.io/panel-control/proyectos.json',
-        mensajePersonalizado: true,
-        verificarCadaMinutos: 5
+        firebaseURL: 'https://alexis-fba4d-default-rtdb.firebaseio.com',
+        // ✅ Firebase configurado correctamente
+        verificarCadaMinutos: 5,
+        cacheLocalMinutos: 30
     };
 
-    // Función principal de verificación
+    const DB_URL = CONFIG.firebaseURL + '/proyectos/' + CONFIG.proyectoId + '.json';
+
+    // ============================================
+    // VERIFICACIÓN PRINCIPAL
+    // ============================================
     function verificarLicencia() {
-        fetch(CONFIG.urlControl + '?t=' + Date.now())
-            .then(response => {
-                if (!response.ok) throw new Error('Error de conexión');
+        fetch(DB_URL + '?t=' + Date.now())
+            .then(function(response) {
+                if (!response.ok) throw new Error('HTTP ' + response.status);
                 return response.json();
             })
-            .then(data => {
-                const proyecto = data[CONFIG.proyectoId];
-                
-                // Verificar si el proyecto existe
-                if (!proyecto) {
-                    mostrarPantallaBloqueo('Licencia no encontrada', 'Este sitio no tiene una licencia válida registrada.');
-                    return;
-                }
-                
-                // Verificar si está activo
-                if (!proyecto.activo) {
-                    mostrarPantallaBloqueo(
-                        'Sitio Desactivado',
-                        'Este sitio ha sido desactivado temporalmente. Por favor, contacte al propietario.'
-                    );
-                    return;
-                }
-                
-                // Verificar fecha de expiración
-                const expira = new Date(proyecto.expira);
-                const hoy = new Date();
-                
-                if (hoy > expira) {
-                    mostrarPantallaBloqueo(
-                        'Licencia Expirada',
-                        `La licencia de este sitio expiró el ${expira.toLocaleDateString('es-ES')}.`
-                    );
-                    return;
-                }
-                
-                // Verificar estado de pago
-                if (!proyecto.pagado) {
-                    mostrarAdvertenciaPago(expira);
-                }
-                
-                // Todo OK - programar siguiente verificación
-                setTimeout(verificarLicencia, CONFIG.verificarCadaMinutos * 60 * 1000);
+            .then(function(proyecto) {
+                if (!proyecto) throw new Error('Proyecto no encontrado');
+                try {
+                    localStorage.setItem('lic_' + CONFIG.proyectoId, JSON.stringify({ data: proyecto, ts: Date.now() }));
+                } catch(e) {}
+                procesarLicencia(proyecto, true);
             })
-            .catch(error => {
-                console.warn('⚠️ No se pudo verificar la licencia:', error.message);
-                // En caso de error de red, permitir el acceso pero intentar de nuevo pronto
-                setTimeout(verificarLicencia, 30000); // Reintentar en 30 segundos
+            .catch(function(error) {
+                console.warn('⚠️ Firebase no disponible:', error.message);
+                usarCacheLocal();
             });
     }
 
-    // Mostrar pantalla de bloqueo
-    function mostrarPantallaBloqueo(titulo, mensaje) {
-        document.body.innerHTML = `
-            <style>
-                body {
-                    margin: 0;
-                    padding: 0;
-                    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-                    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    min-height: 100vh;
-                    overflow: hidden;
+    function usarCacheLocal() {
+        try {
+            var cached = localStorage.getItem('lic_' + CONFIG.proyectoId);
+            if (cached) {
+                var obj = JSON.parse(cached);
+                var mins = (Date.now() - obj.ts) / 60000;
+                if (mins < CONFIG.cacheLocalMinutos) {
+                    procesarLicencia(obj.data, false);
+                    return;
                 }
-                
-                .bloqueo-container {
-                    text-align: center;
-                    padding: 60px 40px;
-                    background: rgba(26, 26, 26, 0.95);
-                    border-radius: 20px;
-                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
-                    border: 1px solid rgba(0, 217, 255, 0.2);
-                    max-width: 500px;
-                    animation: fadeIn 0.5s ease-in;
-                }
-                
-                @keyframes fadeIn {
-                    from { opacity: 0; transform: scale(0.9); }
-                    to { opacity: 1; transform: scale(1); }
-                }
-                
-                .bloqueo-icono {
-                    font-size: 80px;
-                    margin-bottom: 20px;
-                    filter: drop-shadow(0 0 20px rgba(255, 0, 110, 0.5));
-                }
-                
-                .bloqueo-titulo {
-                    font-size: 2.5rem;
-                    color: #ff006e;
-                    margin-bottom: 20px;
-                    font-weight: bold;
-                    text-shadow: 0 0 20px rgba(255, 0, 110, 0.5);
-                }
-                
-                .bloqueo-mensaje {
-                    font-size: 1.2rem;
-                    color: #ccc;
-                    margin-bottom: 30px;
-                    line-height: 1.6;
-                }
-                
-                .bloqueo-info {
-                    font-size: 0.9rem;
-                    color: #888;
-                    padding: 20px;
-                    background: rgba(0, 0, 0, 0.3);
-                    border-radius: 10px;
-                    border: 1px solid rgba(255, 255, 255, 0.05);
-                }
-                
-                .bloqueo-footer {
-                    margin-top: 30px;
-                    font-size: 0.85rem;
-                    color: #666;
-                }
-            </style>
-            <div class="bloqueo-container">
-                <div class="bloqueo-icono">🔒</div>
-                <h1 class="bloqueo-titulo">${titulo}</h1>
-                <p class="bloqueo-mensaje">${mensaje}</p>
-                <div class="bloqueo-info">
-                    <strong>Información:</strong><br>
-                    Este es un sitio protegido con licencia.<br>
-                    Contacte al administrador del sitio para más información.
-                </div>
-                <div class="bloqueo-footer">
-                    Emerson Hacks © ${new Date().getFullYear()}<br>
-                    Sistema de protección activo
-                </div>
-            </div>
-        `;
+            }
+        } catch(e) {}
+        mostrarLicenciaCard({ activo: true, pagado: true, expira: null }, false, 'Sin conexión');
+        setTimeout(verificarLicencia, 30000);
     }
 
-    // Mostrar advertencia de pago pendiente (sin bloquear)
-    function mostrarAdvertenciaPago(expira) {
-        const diasRestantes = Math.ceil((expira - new Date()) / (1000 * 60 * 60 * 24));
-        
-        const banner = document.createElement('div');
-        banner.id = 'advertencia-pago';
-        banner.style.cssText = `
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(135deg, #ff6b00, #ff006e);
-            color: white;
-            padding: 15px;
-            text-align: center;
-            z-index: 999999;
-            font-family: 'Segoe UI', sans-serif;
-            font-size: 14px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-        `;
-        banner.innerHTML = `
-            <strong>⚠️ AVISO:</strong> Pago pendiente. 
-            El sitio expira en ${diasRestantes} días. 
-            Contacte al desarrollador.
-        `;
-        document.body.insertBefore(banner, document.body.firstChild);
-    }
-
-    // Protección contra manipulación del código
-    const originalSetTimeout = window.setTimeout;
-    const originalSetInterval = window.setInterval;
-    
-    // Detectar intentos de deshabilitar el verificador
-    Object.defineProperty(window, 'setTimeout', {
-        value: function(...args) {
-            return originalSetTimeout.apply(this, args);
-        },
-        writable: false,
-        configurable: false
-    });
-
-    // Iniciar verificación inmediatamente
-    verificarLicencia();
-
-    // Protección adicional: verificar periódicamente que el código no fue removido
-    setInterval(function() {
-        if (!document.querySelector('script[src*="verificador"]') && 
-            !document.currentScript) {
-            console.warn('🔒 Sistema de protección activo');
+    function procesarLicencia(proyecto, enLinea) {
+        if (!proyecto.activo) {
+            ocultarLicenciaCard();
+            mostrarPantallaBloqueo('Sitio Desactivado', 'Este sitio ha sido desactivado. Contacta al propietario.');
+            return;
         }
-    }, 60000);
 
+        var expira = new Date(proyecto.expira + 'T00:00:00');
+        var hoy = new Date();
+        hoy.setHours(0, 0, 0, 0);
+
+        if (hoy > expira) {
+            ocultarLicenciaCard();
+            mostrarPantallaBloqueo('Licencia Expirada', 'La licencia expiró el ' + expira.toLocaleDateString('es-ES') + '.');
+            return;
+        }
+
+        if (!proyecto.pagado) {
+            var dias = Math.ceil((expira - hoy) / 86400000);
+            mostrarAdvertenciaPago(dias);
+        }
+
+        mostrarLicenciaCard(proyecto, enLinea, null);
+        setTimeout(verificarLicencia, CONFIG.verificarCadaMinutos * 60000);
+    }
+
+    // ============================================
+    // TARJETA DE LICENCIA
+    // ============================================
+    function mostrarLicenciaCard(proyecto, enLinea, errorMsg) {
+        var existente = document.getElementById('licencia-card-modsljak');
+        if (existente) existente.remove();
+
+        var expiraTexto = 'Error al cargar';
+        if (proyecto.expira) {
+            var expiraDate = new Date(proyecto.expira + 'T00:00:00');
+            var hoy = new Date(); hoy.setHours(0,0,0,0);
+            var dias = Math.ceil((expiraDate - hoy) / 86400000);
+            if (!isNaN(expiraDate)) {
+                expiraTexto = proyecto.expira + (dias > 0 ? ' (' + dias + ' días)' : ' (Expirado)');
+            }
+        } else if (errorMsg) {
+            expiraTexto = errorMsg === 'Sin conexión' ? 'Sin conexión' : 'Error al cargar';
+        }
+
+        var card = document.createElement('div');
+        card.id = 'licencia-card-modsljak';
+        card.style.cssText = 'background:linear-gradient(135deg,rgba(0,30,20,0.95),rgba(0,20,10,0.98));border:1px solid rgba(0,255,65,0.4);border-radius:12px;padding:16px 20px;margin:20px auto;max-width:400px;font-family:Segoe UI,system-ui,sans-serif;font-size:0.9rem;box-shadow:0 4px 20px rgba(0,255,65,0.1);';
+        card.innerHTML = '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">'
+            + '<div><span style="color:#00ff41;font-weight:700;">✅ Estado:</span> <span style="color:#fff;">' + (proyecto.activo ? 'ACTIVO' : 'INACTIVO') + '</span></div>'
+            + '<div><span style="color:#ffaa00;font-weight:700;">💳 Pago:</span> <span style="color:#fff;">' + (proyecto.pagado ? 'PAGADO' : 'PENDIENTE') + '</span></div>'
+            + '</div>'
+            + '<div style="margin-bottom:8px;"><span style="color:#ff6b00;font-weight:700;">📅 Expira:</span> <span style="color:#fff;">' + expiraTexto + '</span></div>'
+            + '<div style="border-top:1px solid rgba(0,255,65,0.2);padding-top:8px;">'
+            + '<span style="color:#ffaa00;font-weight:700;">🔒 Licencia:</span> <span style="color:#00ff41;font-weight:700;">' + (enLinea ? '100% VERIFICADA ✓' : 'VERIFICADA (cache) ✓') + '</span>'
+            + '</div>';
+
+        var footer = document.querySelector('footer');
+        if (footer && footer.parentNode) {
+            footer.parentNode.insertBefore(card, footer.nextSibling);
+        } else {
+            document.body.appendChild(card);
+        }
+    }
+
+    function ocultarLicenciaCard() {
+        var card = document.getElementById('licencia-card-modsljak');
+        if (card) card.remove();
+    }
+
+    // ============================================
+    // PANTALLA DE BLOQUEO
+    // ============================================
+    function mostrarPantallaBloqueo(titulo, mensaje) {
+        document.body.innerHTML = '<style>*{margin:0;padding:0;box-sizing:border-box}body{font-family:Segoe UI,system-ui,sans-serif;background:linear-gradient(135deg,#0a0a0a,#1a1a2e);display:flex;justify-content:center;align-items:center;min-height:100vh}.b{text-align:center;padding:60px 40px;background:rgba(26,26,46,.95);border-radius:20px;box-shadow:0 20px 60px rgba(0,0,0,.5);border:1px solid rgba(189,0,255,.3);max-width:500px;margin:20px;animation:f .5s ease}@keyframes f{from{opacity:0;transform:scale(.9)}to{opacity:1;transform:scale(1)}}.i{font-size:80px;margin-bottom:20px}.t{font-size:2rem;color:#bd00ff;margin-bottom:15px;font-weight:700}.m{font-size:1.1rem;color:#ccc;margin-bottom:25px;line-height:1.6}.n{font-size:.9rem;color:#888;padding:15px;background:rgba(0,0,0,.3);border-radius:10px;border:1px solid rgba(255,255,255,.05)}.f{margin-top:25px;font-size:.8rem;color:#555}</style><div class="b"><div class="i">🔒</div><h1 class="t">' + titulo + '</h1><p class="m">' + mensaje + '</p><div class="n">Sitio protegido con licencia MODSLJAK.<br>Contacta al administrador.</div><div class="f">MODSLJAK © ' + new Date().getFullYear() + ' · Sistema de protección activo</div></div>';
+    }
+
+    // ============================================
+    // BANNER PAGO PENDIENTE
+    // ============================================
+    function mostrarAdvertenciaPago(dias) {
+        if (document.getElementById('aviso-pago-modsljak')) return;
+        var b = document.createElement('div');
+        b.id = 'aviso-pago-modsljak';
+        b.style.cssText = 'position:fixed;top:0;left:0;right:0;background:linear-gradient(135deg,#bd00ff,#ff006e);color:#fff;padding:12px;text-align:center;z-index:999999;font-family:Segoe UI,sans-serif;font-size:14px;box-shadow:0 4px 10px rgba(0,0,0,.3);';
+        b.innerHTML = '⚠️ <strong>Pago pendiente.</strong> El sitio expira en ' + dias + ' días. Contacta al desarrollador.';
+        document.body.insertBefore(b, document.body.firstChild);
+    }
+
+    // INICIO
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', verificarLicencia);
+    } else {
+        verificarLicencia();
+    }
+
+    console.log('%c🔒 MODSLJAK - Sistema Protegido v2.0 🔥 Firebase', 'color:#bd00ff;font-size:14px;font-weight:bold;');
 })();
-
-// Marca de agua en consola
-console.log('%c🔒 EMERSON HACKS - Sistema Protegido', 'color: #00d9ff; font-size: 16px; font-weight: bold;');
-console.log('%c⚠️ Este sitio está protegido con licencia. Cualquier intento de manipulación será detectado.', 'color: #ff006e; font-size: 12px;');

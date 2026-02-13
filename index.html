@@ -404,6 +404,50 @@
             transform: scale(1.05);
         }
 
+        /* Firebase Status Bar */
+        #firebase-status {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 18px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            z-index: 9999;
+            transition: all 0.4s ease;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        #firebase-status.conectado {
+            background: rgba(0, 255, 65, 0.15);
+            border: 1px solid rgba(0, 255, 65, 0.5);
+            color: #00ff41;
+        }
+        #firebase-status.guardando {
+            background: rgba(0, 217, 255, 0.15);
+            border: 1px solid rgba(0, 217, 255, 0.5);
+            color: #00d9ff;
+        }
+        #firebase-status.error {
+            background: rgba(255, 0, 110, 0.15);
+            border: 1px solid rgba(255, 0, 110, 0.5);
+            color: #ff006e;
+        }
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: currentColor;
+            animation: pulsar 1.5s infinite;
+        }
+        @keyframes pulsar {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.7); }
+        }
+
         @media (max-width: 768px) {
             header {
                 flex-direction: column;
@@ -417,6 +461,12 @@
     </style>
 </head>
 <body>
+    <!-- Firebase Status -->
+    <div id="firebase-status" class="error">
+        <div class="pulse-dot"></div>
+        <span id="firebase-status-text">⚙️ Configurar Firebase</span>
+    </div>
+
     <!-- Login Screen -->
     <div class="login-container" id="loginScreen">
         <div class="login-box">
@@ -528,53 +578,83 @@
 
     <script>
         // ============================================
+        // 🔥 CONFIGURACIÓN FIREBASE (EDITAR AQUÍ)
+        // ============================================
+        const FIREBASE_CONFIG = {
+            // 1. Ve a https://console.firebase.google.com
+            // 2. Crea proyecto → Realtime Database → Crear base de datos
+            // 3. Ve a Configuración del proyecto → Cuentas de servicio → Secretos de base de datos
+            // 4. Copia la URL y el Secret abajo:
+            
+            dbURL: 'https://alexis-fba4d-default-rtdb.firebaseio.com',
+            // ✅ URL configurada correctamente
+            
+            secret: 'tUF8DBEqtW1o3fIq5YZfceoLOYWbGw83eebXnj6N'
+            // ✅ Secret token configurado correctamente
+        };
+        // ¿Ya configuraste Firebase? → Cambia los valores de arriba y guarda el archivo
+        // ============================================
+
+        // ============================================
         // CONFIGURACIÓN DE SEGURIDAD
         // ============================================
-        
-        // Credenciales (ofuscadas con Base64)
         const AUTH = {
-            // Usuario: TORRES (Base64)
-            user: atob('VE9SUkVT'),
-            // Contraseña: ALEXIS2020 (Base64)
-            pass: atob('QUxFWElTMjAyMA==')
+            user: atob('VE9SUkVT'),      // TORRES
+            pass: atob('QUxFWElTMjAyMA==') // ALEXIS2020
         };
+
+        // ============================================
+        // VARIABLES GLOBALES
+        // ============================================
+        let proyectosData = null;
+        let proyectoActual = null;
+        const DB_URL = FIREBASE_CONFIG.dbURL + '/proyectos';
+
+        // ============================================
+        // SISTEMA DE ESTADO FIREBASE
+        // ============================================
+        function setStatus(tipo, texto) {
+            const el = document.getElementById('firebase-status');
+            const txt = document.getElementById('firebase-status-text');
+            el.className = '';
+            el.classList.add(tipo);
+            txt.textContent = texto;
+        }
 
         // ============================================
         // SISTEMA DE AUTENTICACIÓN
         // ============================================
-        
-        let proyectosData = null;
-        let proyectoActual = null;
-
-        // Verificar si ya hay sesión activa
         window.addEventListener('DOMContentLoaded', function() {
-            const sesion = sessionStorage.getItem('admin_logged');
-            if (sesion === 'true') {
+            verificarFirebaseConfig();
+            if (sessionStorage.getItem('admin_logged') === 'true') {
                 mostrarPanel();
             }
         });
 
+        function verificarFirebaseConfig() {
+            if (FIREBASE_CONFIG.dbURL.includes('TU-PROYECTO') || 
+                FIREBASE_CONFIG.secret.includes('TU_DATABASE_SECRET')) {
+                setStatus('error', '⚠️ Firebase no configurado');
+            } else {
+                setStatus('guardando', '🔄 Conectando a Firebase...');
+            }
+        }
+
         function login(event) {
             event.preventDefault();
-            
             const usuario = document.getElementById('username').value;
             const contraseña = document.getElementById('password').value;
             
-            // Verificar credenciales
             if (usuario === AUTH.user && contraseña === AUTH.pass) {
                 sessionStorage.setItem('admin_logged', 'true');
                 mostrarPanel();
                 return false;
             }
-            
-            // Error
             document.getElementById('errorMsg').style.display = 'block';
             document.getElementById('password').value = '';
-            
             setTimeout(() => {
                 document.getElementById('errorMsg').style.display = 'none';
             }, 3000);
-            
             return false;
         }
 
@@ -593,21 +673,124 @@
         }
 
         // ============================================
-        // GESTIÓN DE PROYECTOS
+        // 🔥 GESTIÓN DE PROYECTOS - FIREBASE
         // ============================================
 
         function cargarProyectos() {
+            // Si Firebase no está configurado, usar archivo local
+            if (FIREBASE_CONFIG.dbURL.includes('TU-PROYECTO')) {
+                setStatus('error', '⚠️ Configura Firebase para tiempo real');
+                cargarProyectosLocal();
+                return;
+            }
+
+            setStatus('guardando', '🔄 Cargando datos...');
+
+            fetch(DB_URL + '.json?t=' + Date.now())
+                .then(r => {
+                    if (!r.ok) throw new Error('HTTP ' + r.status);
+                    return r.json();
+                })
+                .then(data => {
+                    if (!data) throw new Error('Base de datos vacía - inicializa los datos primero');
+                    proyectosData = data;
+                    renderProyectos(data);
+                    actualizarEstadisticas(data);
+                    setStatus('conectado', '🟢 Firebase conectado (tiempo real)');
+                })
+                .catch(error => {
+                    setStatus('error', '❌ Error: ' + error.message);
+                    console.warn('Firebase error, cargando local:', error);
+                    cargarProyectosLocal();
+                });
+        }
+
+        function cargarProyectosLocal() {
             fetch('proyectos.json?t=' + Date.now())
                 .then(r => r.json())
                 .then(data => {
                     proyectosData = data;
                     renderProyectos(data);
                     actualizarEstadisticas(data);
+                    if (FIREBASE_CONFIG.dbURL.includes('TU-PROYECTO')) {
+                        setStatus('error', '⚠️ Modo local - Configura Firebase para tiempo real');
+                    }
                 })
                 .catch(error => {
-                    alert('⚠️ Error al cargar proyectos: ' + error.message);
+                    setStatus('error', '❌ Error al cargar: ' + error.message);
                 });
         }
+
+        // ============================================
+        // 🔥 GUARDAR EN FIREBASE (TIEMPO REAL)
+        // ============================================
+        function guardarCambios() {
+            // Si Firebase no configurado, mostrar modal de copia manual (modo offline)
+            if (FIREBASE_CONFIG.dbURL.includes('TU-PROYECTO') || 
+                FIREBASE_CONFIG.secret.includes('TU_DATABASE_SECRET')) {
+                guardarCambiosManual();
+                return;
+            }
+
+            setStatus('guardando', '💾 Guardando en tiempo real...');
+
+            fetch(DB_URL + '.json?auth=' + FIREBASE_CONFIG.secret, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(proyectosData)
+            })
+            .then(r => {
+                if (!r.ok) throw new Error('HTTP ' + r.status + ' - Verifica el secret de Firebase');
+                return r.json();
+            })
+            .then(() => {
+                setStatus('conectado', '✅ Guardado! Sitios actualizados al instante');
+                renderProyectos(proyectosData);
+                actualizarEstadisticas(proyectosData);
+                // Volver a estado normal después de 3 segundos
+                setTimeout(() => setStatus('conectado', '🟢 Firebase conectado (tiempo real)'), 3000);
+            })
+            .catch(error => {
+                setStatus('error', '❌ Error al guardar: ' + error.message);
+                console.error('Error Firebase:', error);
+                // Fallback: ofrecer copia manual
+                if (confirm('Error al guardar en Firebase.\n¿Deseas copiar el JSON manualmente?')) {
+                    guardarCambiosManual();
+                }
+            });
+        }
+
+        function guardarCambiosManual() {
+            const jsonStr = JSON.stringify(proyectosData, null, 2);
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 700px;">
+                    <h2 class="modal-title">📝 Actualizar proyectos.json</h2>
+                    <p style="color: #ff006e; margin-bottom: 10px;">
+                        ⚠️ Firebase no configurado. Copia este JSON manualmente:
+                    </p>
+                    <p style="color: #888; margin-bottom: 20px;">
+                        Actualiza el archivo <strong>proyectos.json</strong> en tu repositorio de GitHub.
+                    </p>
+                    <textarea id="jsonOutput" style="width: 100%; height: 300px; background: #000; color: #0f0; 
+                        padding: 15px; border-radius: 8px; border: 1px solid #333; font-family: monospace; 
+                        font-size: 0.9rem;" readonly>${jsonStr}</textarea>
+                    <div class="modal-buttons" style="margin-top: 20px;">
+                        <button class="btn btn-tiempo" onclick="copiarJSON()">📋 Copiar</button>
+                        <button class="btn btn-editar" onclick="cerrarModalGuardar()">✓ Cerrar</button>
+                    </div>
+                    <p style="color: #666; font-size: 0.85rem; margin-top: 15px;">
+                        💡 Configura Firebase para guardar automáticamente en tiempo real
+                    </p>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // ============================================
+        // RENDER Y ESTADÍSTICAS
+        // ============================================
 
         function renderProyectos(proyectos) {
             const lista = document.getElementById('proyectos-lista');
@@ -662,15 +845,12 @@
                                 onclick="toggleActivacion('${id}', ${!proyecto.activo})">
                             ${proyecto.activo ? '🔴 Desactivar Sitio' : '🟢 Activar Sitio'}
                         </button>
-                        
                         <button class="btn btn-tiempo" onclick="abrirModalTiempo('${id}')">
                             ⏰ Agregar Tiempo
                         </button>
-                        
                         <button class="btn btn-editar" onclick="togglePago('${id}', ${!proyecto.pagado})">
                             ${proyecto.pagado ? '💳 Marcar No Pagado' : '💰 Marcar Pagado'}
                         </button>
-                        
                         <a href="${proyecto.url_demo}" class="btn btn-editar" target="_blank" style="text-decoration: none;">
                             🌐 Ver Sitio
                         </a>
@@ -683,12 +863,10 @@
         function actualizarEstadisticas(proyectos) {
             const total = Object.keys(proyectos).length;
             let activos = 0, inactivos = 0, sinPagar = 0;
-
             for (let p of Object.values(proyectos)) {
                 if (p.activo) activos++; else inactivos++;
                 if (!p.pagado) sinPagar++;
             }
-
             document.getElementById('total-proyectos').textContent = total;
             document.getElementById('activos').textContent = activos;
             document.getElementById('inactivos').textContent = inactivos;
@@ -702,7 +880,6 @@
         function toggleActivacion(id, nuevoEstado) {
             const proyecto = proyectosData[id];
             const accion = nuevoEstado ? 'activar' : 'desactivar';
-            
             if (confirm(`¿Estás seguro de ${accion} el sitio "${proyecto.nombre}"?`)) {
                 proyectosData[id].activo = nuevoEstado;
                 proyectosData[id].ultima_actualizacion = new Date().toISOString().split('T')[0];
@@ -729,17 +906,13 @@
 
         function agregarTiempo(dias) {
             if (!proyectoActual) return;
-            
             const proyecto = proyectosData[proyectoActual];
             const fechaActual = new Date(proyecto.expira);
             fechaActual.setDate(fechaActual.getDate() + dias);
-            
             proyectosData[proyectoActual].expira = fechaActual.toISOString().split('T')[0];
             proyectosData[proyectoActual].ultima_actualizacion = new Date().toISOString().split('T')[0];
-            
             cerrarModal();
             guardarCambios();
-            
             alert(`✅ Se agregaron ${dias} días a ${proyecto.nombre}\nNueva fecha: ${fechaActual.toLocaleDateString('es-ES')}`);
         }
 
@@ -752,33 +925,6 @@
             }
         }
 
-        function guardarCambios() {
-            const jsonStr = JSON.stringify(proyectosData, null, 2);
-            
-            // Mostrar instrucciones para actualizar
-            const modal = document.createElement('div');
-            modal.className = 'modal active';
-            modal.innerHTML = `
-                <div class="modal-content" style="max-width: 700px;">
-                    <h2 class="modal-title">📝 Actualizar proyectos.json</h2>
-                    <p style="color: #888; margin-bottom: 20px;">
-                        Copia este contenido y actualiza el archivo <strong>proyectos.json</strong> en tu repositorio de GitHub:
-                    </p>
-                    <textarea id="jsonOutput" style="width: 100%; height: 300px; background: #000; color: #0f0; 
-                        padding: 15px; border-radius: 8px; border: 1px solid #333; font-family: monospace; 
-                        font-size: 0.9rem;" readonly>${jsonStr}</textarea>
-                    <div class="modal-buttons" style="margin-top: 20px;">
-                        <button class="btn btn-tiempo" onclick="copiarJSON()">📋 Copiar al Portapapeles</button>
-                        <button class="btn btn-editar" onclick="cerrarModalGuardar()">✓ Cerrar</button>
-                    </div>
-                    <p style="color: #666; font-size: 0.85rem; margin-top: 15px;">
-                        💡 Los cambios se aplicarán en 1-2 minutos después de actualizar el archivo en GitHub
-                    </p>
-                </div>
-            `;
-            document.body.appendChild(modal);
-        }
-
         function copiarJSON() {
             const textarea = document.getElementById('jsonOutput');
             textarea.select();
@@ -789,7 +935,7 @@
         function cerrarModalGuardar() {
             const modal = document.querySelector('.modal.active:last-of-type');
             if (modal) modal.remove();
-            cargarProyectos(); // Recargar para mostrar cambios
+            cargarProyectos();
         }
     </script>
 </body>
