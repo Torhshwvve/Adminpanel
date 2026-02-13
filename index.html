@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎮 Panel Admin - Control de Proyectos</title>
+    <title>🎮 Panel Admin Pro - ALEXIS</title>
     <style>
         * {
             margin: 0;
@@ -16,9 +16,11 @@
             --success: #00ff41;
             --danger: #ff006e;
             --warning: #ff6b00;
+            --info: #bd00ff;
             --dark: #0a0a0a;
             --card-bg: #1a1a1a;
             --gray: #2a2a2a;
+            --gray-light: #3a3a3a;
         }
 
         body {
@@ -28,11 +30,13 @@
             min-height: 100vh;
             padding: 20px;
             background-image: 
-                radial-gradient(circle at 20% 50%, rgba(0, 217, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 20% 50%, rgba(189, 0, 255, 0.1) 0%, transparent 50%),
                 radial-gradient(circle at 80% 80%, rgba(0, 255, 65, 0.1) 0%, transparent 50%);
         }
 
-        /* Login Screen */
+        /* ============================================
+           LOGIN SCREEN
+           ============================================ */
         .login-container {
             display: flex;
             justify-content: center;
@@ -51,7 +55,7 @@
             background: var(--card-bg);
             padding: 50px 40px;
             border-radius: 20px;
-            border: 1px solid rgba(0, 217, 255, 0.3);
+            border: 1px solid rgba(189, 0, 255, 0.3);
             max-width: 400px;
             width: 100%;
             text-align: center;
@@ -61,13 +65,13 @@
         .login-logo {
             font-size: 4rem;
             margin-bottom: 20px;
-            filter: drop-shadow(0 0 20px rgba(0, 217, 255, 0.5));
+            filter: drop-shadow(0 0 20px rgba(189, 0, 255, 0.5));
         }
 
         .login-title {
             font-size: 2rem;
             margin-bottom: 10px;
-            background: linear-gradient(135deg, var(--primary), var(--success));
+            background: linear-gradient(135deg, var(--info), var(--success));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -104,17 +108,17 @@
 
         .form-input:focus {
             outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 10px rgba(0, 217, 255, 0.3);
+            border-color: var(--info);
+            box-shadow: 0 0 10px rgba(189, 0, 255, 0.3);
         }
 
         .btn-login {
             width: 100%;
             padding: 15px;
-            background: linear-gradient(135deg, var(--primary), var(--success));
+            background: linear-gradient(135deg, var(--info), var(--success));
             border: none;
             border-radius: 8px;
-            color: #000;
+            color: #fff;
             font-size: 1.1rem;
             font-weight: bold;
             cursor: pointer;
@@ -136,9 +140,11 @@
             display: none;
         }
 
-        /* Main Panel */
+        /* ============================================
+           MAIN PANEL - Usando los estilos del panel mejorado
+           ============================================ */
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             display: none;
         }
@@ -151,18 +157,18 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
             padding: 30px;
-            background: linear-gradient(135deg, rgba(0, 217, 255, 0.1) 0%, rgba(0, 255, 65, 0.1) 100%);
+            background: linear-gradient(135deg, rgba(189, 0, 255, 0.1) 0%, rgba(0, 255, 65, 0.1) 100%);
             border-radius: 15px;
-            border: 1px solid rgba(0, 217, 255, 0.2);
+            border: 1px solid rgba(189, 0, 255, 0.2);
             flex-wrap: wrap;
             gap: 20px;
         }
 
         .header-left h1 {
             font-size: 2rem;
-            background: linear-gradient(135deg, var(--primary), var(--success));
+            background: linear-gradient(135deg, var(--info), var(--success));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -171,13 +177,14 @@
             display: flex;
             gap: 10px;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .user-info {
             padding: 10px 20px;
-            background: rgba(0, 217, 255, 0.1);
+            background: rgba(189, 0, 255, 0.1);
             border-radius: 8px;
-            border: 1px solid rgba(0, 217, 255, 0.3);
+            border: 1px solid rgba(189, 0, 255, 0.3);
         }
 
         .btn-logout {
@@ -195,11 +202,55 @@
             background: rgba(255, 0, 110, 0.3);
         }
 
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            background: var(--card-bg);
+            padding: 10px;
+            border-radius: 12px;
+            border: 1px solid var(--gray);
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: none;
+            color: #888;
+            cursor: pointer;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .tab.active {
+            background: linear-gradient(135deg, var(--info), var(--success));
+            color: #fff;
+        }
+
+        .tab:hover:not(.active) {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Stats Cards */
         .stats {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 20px;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
         .stat-card {
@@ -208,56 +259,189 @@
             border-radius: 12px;
             border: 1px solid var(--gray);
             text-align: center;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
         .stat-number {
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 10px;
         }
 
         .stat-label {
             color: #888;
-            text-transform: uppercase;
             font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
+        .stat-card.primary .stat-number { color: var(--primary); }
+        .stat-card.success .stat-number { color: var(--success); }
+        .stat-card.danger .stat-number { color: var(--danger); }
+        .stat-card.warning .stat-number { color: var(--warning); }
+        .stat-card.info .stat-number { color: var(--info); }
+
+        /* Quick Actions */
+        .quick-actions {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--gray);
+            margin-bottom: 30px;
+        }
+
+        .quick-actions h3 {
+            margin-bottom: 15px;
+            color: var(--info);
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .action-btn.danger {
+            background: rgba(255, 0, 110, 0.2);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+        }
+
+        .action-btn.success {
+            background: rgba(0, 255, 65, 0.2);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+
+        .action-btn.warning {
+            background: rgba(255, 107, 0, 0.2);
+            border: 1px solid var(--warning);
+            color: var(--warning);
+        }
+
+        .action-btn.info {
+            background: rgba(189, 0, 255, 0.2);
+            border: 1px solid var(--info);
+            color: var(--info);
+        }
+
+        /* Search and Filters */
+        .search-filter {
+            background: var(--card-bg);
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid var(--gray);
+            margin-bottom: 30px;
+        }
+
+        .search-box {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-input {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            font-size: 1rem;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--info);
+        }
+
+        .filter-select {
+            padding: 12px 20px;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        /* Projects List */
         .proyecto {
             background: var(--card-bg);
-            padding: 30px;
-            margin-bottom: 25px;
-            border-radius: 15px;
-            border-left: 5px solid;
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--gray);
+            margin-bottom: 20px;
+            transition: all 0.3s;
         }
 
-        .proyecto.activo {
-            border-left-color: var(--success);
+        .proyecto:hover {
+            border-color: var(--info);
+            box-shadow: 0 5px 20px rgba(189, 0, 255, 0.2);
         }
 
         .proyecto.inactivo {
-            border-left-color: var(--danger);
+            opacity: 0.7;
+            border-color: var(--danger);
+        }
+
+        .proyecto.mantenimiento {
+            border-color: var(--warning);
+            background: linear-gradient(135deg, rgba(255, 107, 0, 0.05), transparent);
         }
 
         .proyecto-header {
             display: flex;
             justify-content: space-between;
-            align-items: start;
+            align-items: flex-start;
             margin-bottom: 20px;
             flex-wrap: wrap;
             gap: 15px;
         }
 
         .proyecto-titulo {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: bold;
+            background: linear-gradient(135deg, var(--info), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .badges {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
         .badge {
-            padding: 5px 15px;
-            border-radius: 20px;
+            padding: 6px 12px;
+            border-radius: 6px;
             font-size: 0.85rem;
             font-weight: 600;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .badge.activo {
@@ -272,6 +456,18 @@
             border: 1px solid var(--danger);
         }
 
+        .badge.mantenimiento {
+            background: rgba(255, 107, 0, 0.2);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+
+        .badge.pagado {
+            background: rgba(189, 0, 255, 0.2);
+            color: var(--info);
+            border: 1px solid var(--info);
+        }
+
         .proyecto-info {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -280,8 +476,8 @@
         }
 
         .info-item {
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.03);
+            background: rgba(255, 255, 255, 0.02);
+            padding: 12px;
             border-radius: 8px;
         }
 
@@ -289,34 +485,30 @@
             color: #888;
             font-size: 0.85rem;
             margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .info-value {
-            font-size: 1.1rem;
+            color: #fff;
             font-weight: 600;
+            font-size: 1.1rem;
         }
 
         .controles {
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.3);
-            border-radius: 10px;
-            margin-top: 20px;
         }
 
         .btn {
-            padding: 12px 25px;
+            padding: 10px 18px;
             border: none;
             border-radius: 8px;
-            font-size: 0.95rem;
-            font-weight: 600;
             cursor: pointer;
+            font-weight: 600;
             transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+            font-size: 0.9rem;
         }
 
         .btn:hover {
@@ -324,26 +516,36 @@
         }
 
         .btn-activar {
-            background: linear-gradient(135deg, var(--success), #00cc33);
-            color: #000;
+            background: rgba(0, 255, 65, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
         }
 
         .btn-desactivar {
-            background: linear-gradient(135deg, var(--danger), #cc0055);
-            color: #fff;
+            background: rgba(255, 0, 110, 0.2);
+            color: var(--danger);
+            border: 1px solid var(--danger);
         }
 
         .btn-tiempo {
-            background: linear-gradient(135deg, var(--primary), #0080ff);
-            color: #fff;
+            background: rgba(189, 0, 255, 0.2);
+            color: var(--info);
+            border: 1px solid var(--info);
         }
 
         .btn-editar {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 217, 255, 0.2);
+            color: var(--primary);
+            border: 1px solid var(--primary);
         }
 
+        .btn-warning {
+            background: rgba(255, 107, 0, 0.2);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -351,10 +553,10 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.9);
             z-index: 10000;
-            justify-content: center;
             align-items: center;
+            justify-content: center;
         }
 
         .modal.active {
@@ -363,433 +565,789 @@
 
         .modal-content {
             background: var(--card-bg);
-            padding: 40px;
+            padding: 30px;
             border-radius: 15px;
-            border: 1px solid rgba(0, 217, 255, 0.3);
+            border: 1px solid rgba(189, 0, 255, 0.3);
             max-width: 500px;
             width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
         .modal-title {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             margin-bottom: 20px;
-            color: var(--primary);
+            background: linear-gradient(135deg, var(--info), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .modal-buttons {
             display: flex;
             gap: 10px;
+            flex-wrap: wrap;
             margin-top: 20px;
         }
 
-        .tiempo-selector {
+        .time-options {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
+            grid-template-columns: repeat(2, 1fr);
             gap: 10px;
-            margin: 20px 0;
+            margin-bottom: 20px;
         }
 
-        .tiempo-option {
+        .time-btn {
             padding: 15px;
-            background: rgba(0, 217, 255, 0.1);
-            border: 1px solid rgba(0, 217, 255, 0.3);
+            background: rgba(189, 0, 255, 0.1);
+            border: 1px solid var(--info);
+            color: var(--info);
             border-radius: 8px;
-            text-align: center;
             cursor: pointer;
+            font-weight: 600;
             transition: all 0.3s;
         }
 
-        .tiempo-option:hover {
-            background: rgba(0, 217, 255, 0.2);
-            transform: scale(1.05);
+        .time-btn:hover {
+            background: rgba(189, 0, 255, 0.2);
         }
 
-        /* Firebase Status Bar */
-        #firebase-status {
+        .time-btn.negative {
+            background: rgba(255, 0, 110, 0.1);
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        .time-btn.negative:hover {
+            background: rgba(255, 0, 110, 0.2);
+        }
+
+        /* Status Bar */
+        .status-bar {
             position: fixed;
             bottom: 20px;
             right: 20px;
-            padding: 10px 18px;
-            border-radius: 30px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            z-index: 9999;
-            transition: all 0.4s ease;
-            backdrop-filter: blur(10px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+            background: var(--card-bg);
+            padding: 15px 25px;
+            border-radius: 10px;
+            border: 1px solid var(--gray);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            z-index: 1000;
         }
-        #firebase-status.conectado {
-            background: rgba(0, 255, 65, 0.15);
-            border: 1px solid rgba(0, 255, 65, 0.5);
-            color: #00ff41;
-        }
-        #firebase-status.guardando {
-            background: rgba(0, 217, 255, 0.15);
-            border: 1px solid rgba(0, 217, 255, 0.5);
-            color: #00d9ff;
-        }
-        #firebase-status.error {
-            background: rgba(255, 0, 110, 0.15);
-            border: 1px solid rgba(255, 0, 110, 0.5);
-            color: #ff006e;
-        }
-        .pulse-dot {
-            width: 8px;
-            height: 8px;
+
+        .status-indicator {
+            width: 10px;
+            height: 10px;
             border-radius: 50%;
-            background: currentColor;
-            animation: pulsar 1.5s infinite;
+            animation: pulse 2s infinite;
         }
-        @keyframes pulsar {
-            0%, 100% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.4; transform: scale(0.7); }
+
+        .status-indicator.conectado {
+            background: var(--success);
+        }
+
+        .status-indicator.error {
+            background: var(--danger);
+        }
+
+        .status-indicator.guardando {
+            background: var(--warning);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Activity Log */
+        .activity-log {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--gray);
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .activity-log h3 {
+            color: var(--info);
+            margin-bottom: 20px;
+        }
+
+        .log-item {
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            border-left: 3px solid var(--info);
+            border-radius: 6px;
+            margin-bottom: 10px;
+        }
+
+        .log-time {
+            color: #888;
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+        }
+
+        .log-action {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        /* Alerts Section */
+        .alerts-section {
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--gray);
+            margin-bottom: 30px;
+        }
+
+        .alert-item {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .alert-item.warning {
+            background: rgba(255, 107, 0, 0.1);
+            border: 1px solid var(--warning);
+        }
+
+        .alert-item.danger {
+            background: rgba(255, 0, 110, 0.1);
+            border: 1px solid var(--danger);
+        }
+
+        .alert-icon {
+            font-size: 1.5rem;
+        }
+
+        /* Analytics - Clicks por Día */
+        .analytics-proyecto {
+            background: var(--card-bg);
+            border: 1px solid var(--gray);
+            border-radius: 12px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        .analytics-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 22px;
+            cursor: pointer;
+            background: rgba(189,0,255,0.05);
+            border-bottom: 1px solid var(--gray);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .analytics-header:hover {
+            background: rgba(189,0,255,0.1);
+        }
+        .analytics-proyecto-nombre {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #fff;
+        }
+        .analytics-badges {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        .badge-hoy {
+            background: rgba(0,255,65,0.15);
+            border: 1px solid var(--success);
+            color: var(--success);
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+        .badge-total {
+            background: rgba(189,0,255,0.15);
+            border: 1px solid var(--info);
+            color: var(--info);
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+        .analytics-body {
+            padding: 20px 22px;
+        }
+        .dias-tabla {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .dias-tabla th {
+            text-align: left;
+            color: #888;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--gray);
+        }
+        .dias-tabla td {
+            padding: 10px 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.04);
+            vertical-align: middle;
+        }
+        .dias-tabla tr:last-child td { border-bottom: none; }
+        .dia-fecha {
+            color: #ccc;
+            font-size: 0.95rem;
+            min-width: 120px;
+        }
+        .dia-barra-wrap {
+            width: 100%;
+        }
+        .dia-barra-bg {
+            background: var(--gray);
+            border-radius: 20px;
+            height: 14px;
+            overflow: hidden;
+        }
+        .dia-barra {
+            height: 100%;
+            border-radius: 20px;
+            background: linear-gradient(90deg, var(--info), var(--success));
+            transition: width 0.4s ease;
+            min-width: 4px;
+        }
+        .dia-num {
+            text-align: right;
+            font-weight: 700;
+            color: var(--success);
+            font-size: 1rem;
+            min-width: 45px;
+        }
+        .sin-datos-dia {
+            color: #555;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9rem;
+        }
+        .click-reset-btn {
+            padding: 5px 12px;
+            background: rgba(255,0,110,0.15);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .click-reset-btn:hover { background: rgba(255,0,110,0.3); }
+        .toggle-arrow {
+            color: #888;
+            font-size: 1rem;
+            transition: transform 0.3s;
+        }
+        .analytics-proyecto.abierto .toggle-arrow {
+            transform: rotate(180deg);
         }
 
         @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                text-align: center;
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
             }
 
-            .proyecto-header {
-                flex-direction: column;
+            .proyecto-info {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                overflow-x: auto;
+            }
+
+            .header-right {
+                width: 100%;
+                justify-content: space-between;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Firebase Status -->
-    <div id="firebase-status" class="error">
-        <div class="pulse-dot"></div>
-        <span id="firebase-status-text">⚙️ Configurar Firebase</span>
-    </div>
 
-    <!-- Login Screen -->
-    <div class="login-container" id="loginScreen">
+    <!-- ============================================
+         LOGIN SCREEN
+         ============================================ -->
+    <div id="login-container" class="login-container">
         <div class="login-box">
             <div class="login-logo">🎮</div>
-            <h1 class="login-title">Panel Admin</h1>
-            <p class="login-subtitle">Control de Proyectos Web</p>
+            <h1 class="login-title">Panel Admin ALEXIS</h1>
+            <p class="login-subtitle">Sistema de Control de Proyectos</p>
             
-            <form id="loginForm" onsubmit="return login(event)">
-                <div class="form-group">
-                    <label class="form-label">Usuario</label>
-                    <input type="text" id="username" class="form-input" placeholder="Ingresa tu usuario" required>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Contraseña</label>
-                    <input type="password" id="password" class="form-input" placeholder="Ingresa tu contraseña" required>
-                </div>
-                
-                <button type="submit" class="btn-login">🔓 Acceder</button>
-                
-                <div class="error-msg" id="errorMsg">
-                    ❌ Usuario o contraseña incorrectos
-                </div>
-            </form>
+            <div class="form-group">
+                <label class="form-label">Usuario</label>
+                <input type="text" id="username" class="form-input" placeholder="Ingresa tu usuario" onkeydown="if(event.key==='Enter') document.getElementById('password').focus()">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Contraseña</label>
+                <input type="password" id="password" class="form-input" placeholder="••••••••" onkeydown="if(event.key==='Enter') login()">
+            </div>
+            
+            <button class="btn-login" onclick="login()">🚀 Iniciar Sesión</button>
+            
+            <div id="error-msg" class="error-msg">
+                ❌ Usuario o contraseña incorrectos
+            </div>
+
+            <p style="margin-top: 30px; color: #666; font-size: 0.85rem;">
+                🔒 Acceso restringido
+            </p>
         </div>
     </div>
 
-    <!-- Main Panel -->
-    <div class="container" id="mainPanel">
+    <!-- ============================================
+         MAIN PANEL
+         ============================================ -->
+    <div id="main-container" class="container">
+        
+        <!-- Header -->
         <header>
             <div class="header-left">
-                <h1>🎮 Panel de Control de Proyectos</h1>
-                <p style="color: #888;">Sistema de gestión y protección</p>
+                <h1>🎮 Panel Admin ALEXIS</h1>
+                <p style="color: #888;">Sistema de Control de Proyectos</p>
             </div>
             <div class="header-right">
                 <div class="user-info">
-                    👤 Usuario: <strong id="currentUser">TORRES</strong>
+                    👤 <span id="usuario-nombre">Admin</span>
                 </div>
-                <button class="btn-logout" onclick="logout()">🚪 Cerrar Sesión</button>
+                <button class="btn-logout" onclick="logout()">🚪 Salir</button>
             </div>
         </header>
 
-        <div class="stats" id="stats">
-            <div class="stat-card">
+        <!-- Stats Cards -->
+        <div class="stats">
+            <div class="stat-card info">
                 <div class="stat-number" id="total-proyectos">0</div>
-                <div class="stat-label">Total Proyectos</div>
+                <div class="stat-label">📊 Total Proyectos</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-number" style="color: var(--success);" id="activos">0</div>
-                <div class="stat-label">Activos</div>
+            <div class="stat-card success">
+                <div class="stat-number" id="activos">0</div>
+                <div class="stat-label">✅ Activos</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-number" style="color: var(--danger);" id="inactivos">0</div>
-                <div class="stat-label">Inactivos</div>
+            <div class="stat-card danger">
+                <div class="stat-number" id="inactivos">0</div>
+                <div class="stat-label">❌ Inactivos</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-number" style="color: var(--warning);" id="sin-pagar">0</div>
-                <div class="stat-label">Sin Pagar</div>
+            <div class="stat-card warning">
+                <div class="stat-number" id="sin-pagar">0</div>
+                <div class="stat-label">💰 Sin Pagar</div>
+            </div>
+            <div class="stat-card primary">
+                <div class="stat-number" id="en-mantenimiento">0</div>
+                <div class="stat-label">🔧 Mantenimiento</div>
+            </div>
+            <div class="stat-card success">
+                <div class="stat-number" id="total-clicks">0</div>
+                <div class="stat-label">🛒 Total Clicks</div>
             </div>
         </div>
 
-        <div id="proyectos-lista"></div>
+        <!-- Quick Actions -->
+        <div class="quick-actions">
+            <h3>⚡ Acciones Rápidas</h3>
+            <div class="action-buttons">
+                <button class="action-btn danger" onclick="bloquearNoPagados()">
+                    🔒 Bloquear sitios no pagados
+                </button>
+                <button class="action-btn success" onclick="activarPagados()">
+                    ✅ Activar sitios pagados
+                </button>
+                <button class="action-btn warning" onclick="alertarProximosVencer()">
+                    ⏰ Ver próximos a vencer
+                </button>
+                <button class="action-btn info" onclick="exportarReporte()">
+                    📥 Exportar reporte
+                </button>
+                <button class="action-btn info" onclick="limpiarHistorial()">
+                    🗑️ Limpiar historial
+                </button>
+                <button class="action-btn success" onclick="abrirModalNuevoProyecto()">
+                    ➕ Nuevo Proyecto
+                </button>
+            </div>
+        </div>
+
+        <!-- Tabs Navigation -->
+        <div class="tabs">
+            <button class="tab active" onclick="cambiarTab('proyectos')">📁 Proyectos</button>
+            <button class="tab" onclick="cambiarTab('historial')">📜 Historial</button>
+            <button class="tab" onclick="cambiarTab('alertas')">⚠️ Alertas</button>
+            <button class="tab" onclick="cambiarTab('analytics')">📊 Clicks Compra</button>
+            <button class="tab" onclick="cambiarTab('usuarios')">👤 Usuarios</button>
+        </div>
+
+        <!-- TAB: Proyectos -->
+        <div id="tab-proyectos" class="tab-content active">
+            <!-- Search and Filter -->
+            <div class="search-filter">
+                <div class="search-box">
+                    <input type="text" class="search-input" id="search-input" 
+                           placeholder="🔍 Buscar proyecto..." 
+                           oninput="filtrarProyectos()">
+                    <select class="filter-select" id="filter-estado" onchange="filtrarProyectos()">
+                        <option value="todos">Todos</option>
+                        <option value="activos">Activos</option>
+                        <option value="inactivos">Inactivos</option>
+                        <option value="pagados">Pagados</option>
+                        <option value="no-pagados">No Pagados</option>
+                        <option value="mantenimiento">En Mantenimiento</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Projects List -->
+            <div id="proyectos-lista"></div>
+        </div>
+
+        <!-- TAB: Historial -->
+        <div id="tab-historial" class="tab-content">
+            <div class="activity-log">
+                <h3>📜 Historial de Actividad</h3>
+                <div id="log-container"></div>
+            </div>
+        </div>
+
+        <!-- TAB: Alertas -->
+        <div id="tab-alertas" class="tab-content">
+            <div class="alerts-section">
+                <h3>⚠️ Alertas y Notificaciones</h3>
+                <div id="alertas-container"></div>
+            </div>
+        </div>
+
+        <!-- TAB: Usuarios -->
+        <div id="tab-usuarios" class="tab-content">
+            <div class="alerts-section" style="margin-bottom:20px;">
+                <h3 style="margin-bottom:20px;">➕ Agregar Nuevo Usuario</h3>
+                <div style="display:grid; gap:15px; max-width:500px;">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="form-label">Usuario</label>
+                        <input type="text" id="nuevo-usuario" class="form-input" placeholder="Ej: CARLOS">
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="form-label">Contraseña</label>
+                        <input type="password" id="nueva-contrasena" class="form-input" placeholder="Contraseña segura">
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="form-label">Repetir Contraseña</label>
+                        <input type="password" id="repetir-contrasena" class="form-input" placeholder="Repite la contraseña">
+                    </div>
+                    <button class="action-btn success" style="width:fit-content;" onclick="agregarUsuario()">
+                        💾 Guardar Usuario
+                    </button>
+                    <div id="msg-usuarios" style="display:none; padding:12px; border-radius:8px; font-weight:600;"></div>
+                </div>
+            </div>
+            <div class="alerts-section">
+                <h3 style="margin-bottom:20px;">👥 Usuarios Guardados</h3>
+                <div id="lista-usuarios"></div>
+            </div>
+        </div>
+            <div class="alerts-section">
+                <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:20px;">
+                    <div>
+                        <h3>🛒 Clicks por Día en Botón de Compra</h3>
+                        <p style="color:#888; margin-top:6px; font-size:0.9rem;">Cuántas personas apretaron "Comprar" cada día en cada proyecto.</p>
+                    </div>
+                    <select id="filtro-dias" class="filter-select" onchange="renderAnalytics()" style="height:42px;">
+                        <option value="7">Últimos 7 días</option>
+                        <option value="30" selected>Últimos 30 días</option>
+                        <option value="90">Últimos 90 días</option>
+                        <option value="0">Todos los días</option>
+                    </select>
+                </div>
+                <div id="analytics-container"></div>
+            </div>
+        </div>
+    <div class="status-bar">
+        <div class="status-indicator conectado" id="status-indicator"></div>
+        <span id="status-text">🟢 Firebase conectado</span>
     </div>
 
-    <!-- Modal para agregar tiempo -->
-    <div class="modal" id="modalTiempo">
+    <!-- Modal: Agregar Tiempo -->
+    <div id="modalTiempo" class="modal">
         <div class="modal-content">
-            <h2 class="modal-title">⏰ Agregar Tiempo</h2>
-            <p style="color: #888; margin-bottom: 20px;">Selecciona cuánto tiempo agregar a <strong id="proyectoNombre"></strong></p>
+            <h2 class="modal-title">⏰ Gestionar Tiempo</h2>
+            <p style="margin-bottom: 20px;">Proyecto: <strong id="proyectoNombre"></strong></p>
             
-            <div class="tiempo-selector">
-                <div class="tiempo-option" onclick="agregarTiempo(7)">
-                    <div style="font-size: 2rem;">📅</div>
-                    <div>7 días</div>
-                </div>
-                <div class="tiempo-option" onclick="agregarTiempo(15)">
-                    <div style="font-size: 2rem;">📅</div>
-                    <div>15 días</div>
-                </div>
-                <div class="tiempo-option" onclick="agregarTiempo(30)">
-                    <div style="font-size: 2rem;">📅</div>
-                    <div>1 mes</div>
-                </div>
-                <div class="tiempo-option" onclick="agregarTiempo(60)">
-                    <div style="font-size: 2rem;">📅</div>
-                    <div>2 meses</div>
-                </div>
-                <div class="tiempo-option" onclick="agregarTiempo(90)">
-                    <div style="font-size: 2rem;">📅</div>
-                    <div>3 meses</div>
-                </div>
-                <div class="tiempo-option" onclick="agregarTiempo(180)">
-                    <div style="font-size: 2rem;">📅</div>
-                    <div>6 meses</div>
-                </div>
+            <h4 style="color: var(--success); margin-bottom: 10px;">➕ Agregar Tiempo</h4>
+            <div class="time-options">
+                <button class="time-btn" onclick="agregarTiempo(7)">+7 días</button>
+                <button class="time-btn" onclick="agregarTiempo(15)">+15 días</button>
+                <button class="time-btn" onclick="agregarTiempo(30)">+30 días</button>
+                <button class="time-btn" onclick="agregarTiempo(60)">+60 días</button>
+            </div>
+
+            <h4 style="color: var(--danger); margin-bottom: 10px; margin-top: 20px;">➖ Quitar Tiempo</h4>
+            <div class="time-options">
+                <button class="time-btn negative" onclick="agregarTiempo(-7)">-7 días</button>
+                <button class="time-btn negative" onclick="agregarTiempo(-15)">-15 días</button>
+                <button class="time-btn negative" onclick="agregarTiempo(-30)">-30 días</button>
+                <button class="time-btn negative" onclick="agregarTiempo(-60)">-60 días</button>
             </div>
 
             <div style="margin-top: 20px;">
-                <label class="form-label">O ingresa días personalizados:</label>
-                <input type="number" id="diasCustom" class="form-input" placeholder="Ej: 45" min="1">
+                <label style="color: #888; display: block; margin-bottom: 5px;">Días personalizados:</label>
+                <input type="number" id="diasCustom" class="form-input" 
+                       placeholder="Ej: 45 (positivo) o -45 (negativo)">
             </div>
 
             <div class="modal-buttons">
-                <button class="btn btn-tiempo" onclick="agregarTiempoCustom()">✓ Confirmar</button>
-                <button class="btn btn-editar" onclick="cerrarModal()">✗ Cancelar</button>
+                <button class="btn btn-tiempo" onclick="agregarTiempoCustom()">✓ Aplicar Custom</button>
+                <button class="btn btn-desactivar" onclick="cerrarModal()">✗ Cancelar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal: Nuevo Proyecto -->
+    <div id="modalNuevoProyecto" class="modal">
+        <div class="modal-content" style="max-width:560px;">
+            <h2 class="modal-title">➕ Nuevo Proyecto</h2>
+            <div style="display:grid; gap:14px;">
+                <div>
+                    <label class="form-label">ID del Proyecto (sin espacios)</label>
+                    <input type="text" id="np-id" class="form-input" placeholder="Ej: modsljak_android">
+                    <small style="color:#666; font-size:0.8rem;">⚠️ Debe coincidir con el MODSLJAK_PROYECTO_ID del sitio</small>
+                </div>
+                <div>
+                    <label class="form-label">Nombre visible</label>
+                    <input type="text" id="np-nombre" class="form-input" placeholder="Ej: MODSLJAK Android">
+                </div>
+                <div>
+                    <label class="form-label">Cliente / Dueño</label>
+                    <input type="text" id="np-cliente" class="form-input" placeholder="Ej: Victor">
+                </div>
+                <div>
+                    <label class="form-label">URL del sitio</label>
+                    <input type="text" id="np-url" class="form-input" placeholder="https://misitio.com/android.html">
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+                    <div>
+                        <label class="form-label">Precio mensual</label>
+                        <input type="text" id="np-precio" class="form-input" placeholder="Ej: $20/mes">
+                    </div>
+                    <div>
+                        <label class="form-label">Fecha expiración</label>
+                        <input type="date" id="np-expira" class="form-input">
+                    </div>
+                </div>
+                <div style="display:flex; gap:20px;">
+                    <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:#ccc;">
+                        <input type="checkbox" id="np-activo" checked style="width:16px; height:16px;"> Activo
+                    </label>
+                    <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:#ccc;">
+                        <input type="checkbox" id="np-pagado" checked style="width:16px; height:16px;"> Pagado
+                    </label>
+                </div>
+            </div>
+            <div id="np-msg" style="display:none; padding:12px; border-radius:8px; margin-top:15px; font-weight:600;"></div>
+            <div class="modal-buttons" style="margin-top:20px;">
+                <button class="btn btn-activar" onclick="guardarNuevoProyecto()">💾 Crear Proyecto</button>
+                <button class="btn btn-desactivar" onclick="cerrarModalNuevoProyecto()">✗ Cancelar</button>
             </div>
         </div>
     </div>
 
     <script>
         // ============================================
-        // 🔥 CONFIGURACIÓN FIREBASE (EDITAR AQUÍ)
+        // CONFIGURACIÓN FIREBASE REAL
         // ============================================
+        
         const FIREBASE_CONFIG = {
-            // 1. Ve a https://console.firebase.google.com
-            // 2. Crea proyecto → Realtime Database → Crear base de datos
-            // 3. Ve a Configuración del proyecto → Cuentas de servicio → Secretos de base de datos
-            // 4. Copia la URL y el Secret abajo:
-            
-            dbURL: 'https://alexis-fba4d-default-rtdb.firebaseio.com',
-            // ✅ URL configurada correctamente
-            
-            secret: 'tUF8DBEqtW1o3fIq5YZfceoLOYWbGw83eebXnj6N'
-            // ✅ Secret token configurado correctamente
-        };
-        // ¿Ya configuraste Firebase? → Cambia los valores de arriba y guarda el archivo
-        // ============================================
-
-        // ============================================
-        // CONFIGURACIÓN DE SEGURIDAD
-        // ============================================
-        const AUTH = {
-            user: atob('VE9SUkVT'),      // TORRES
-            pass: atob('QUxFWElTMjAyMA==') // ALEXIS2020
+            databaseURL: 'https://alexis-fba4d-default-rtdb.firebaseio.com'
         };
 
+        const DB_URL = FIREBASE_CONFIG.databaseURL + '/proyectos';
+
         // ============================================
-        // VARIABLES GLOBALES
+        // CREDENCIALES - HASH SHA-256 (NO EDITAR)
         // ============================================
-        let proyectosData = null;
+
+        const _h = {
+            '\x37\x65\x37\x65\x38\x62\x30\x30\x37\x64\x31\x61\x63\x32\x38\x30\x66\x63\x61\x30\x31\x38\x65\x34\x30\x33\x31\x66\x63\x65\x36\x38\x61\x64\x39\x32\x39\x30\x36\x64\x38\x32\x34\x33\x31\x31\x32\x35\x38\x32\x64\x32\x37\x30\x35\x32\x33\x64\x63\x31\x38\x31\x37\x36':
+            '\x38\x38\x39\x31\x64\x39\x34\x65\x61\x32\x30\x33\x32\x36\x37\x63\x63\x66\x64\x34\x33\x34\x38\x39\x62\x32\x33\x64\x65\x34\x39\x63\x33\x35\x62\x35\x65\x33\x64\x61\x62\x61\x61\x62\x62\x66\x35\x38\x66\x64\x39\x35\x36\x66\x63\x30\x37\x61\x64\x38\x63\x32\x66\x34'
+        };
+
+        async function _sha256(str) {
+            const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+            return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+        }
+
+        let proyectosData = {};
         let proyectoActual = null;
-        const DB_URL = FIREBASE_CONFIG.dbURL + '/proyectos';
+        let activityLog = JSON.parse(localStorage.getItem('activityLog') || '[]');
 
         // ============================================
-        // SISTEMA DE ESTADO FIREBASE
-        // ============================================
-        function setStatus(tipo, texto) {
-            const el = document.getElementById('firebase-status');
-            const txt = document.getElementById('firebase-status-text');
-            el.className = '';
-            el.classList.add(tipo);
-            txt.textContent = texto;
-        }
-
-        // ============================================
-        // SISTEMA DE AUTENTICACIÓN
-        // ============================================
-        window.addEventListener('DOMContentLoaded', function() {
-            verificarFirebaseConfig();
-            if (sessionStorage.getItem('admin_logged') === 'true') {
-                mostrarPanel();
-            }
-        });
-
-        function verificarFirebaseConfig() {
-            if (FIREBASE_CONFIG.dbURL.includes('TU-PROYECTO') || 
-                FIREBASE_CONFIG.secret.includes('TU_DATABASE_SECRET')) {
-                setStatus('error', '⚠️ Firebase no configurado');
-            } else {
-                setStatus('guardando', '🔄 Conectando a Firebase...');
-            }
-        }
-
-        function login(event) {
-            event.preventDefault();
-            const usuario = document.getElementById('username').value;
-            const contraseña = document.getElementById('password').value;
-            
-            if (usuario === AUTH.user && contraseña === AUTH.pass) {
-                sessionStorage.setItem('admin_logged', 'true');
-                mostrarPanel();
-                return false;
-            }
-            document.getElementById('errorMsg').style.display = 'block';
-            document.getElementById('password').value = '';
-            setTimeout(() => {
-                document.getElementById('errorMsg').style.display = 'none';
-            }, 3000);
-            return false;
-        }
-
-        function logout() {
-            sessionStorage.removeItem('admin_logged');
-            document.getElementById('loginScreen').style.display = 'flex';
-            document.getElementById('mainPanel').classList.remove('active');
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-        }
-
-        function mostrarPanel() {
-            document.getElementById('loginScreen').style.display = 'none';
-            document.getElementById('mainPanel').classList.add('active');
-            cargarProyectos();
-        }
-
-        // ============================================
-        // 🔥 GESTIÓN DE PROYECTOS - FIREBASE
+        // LOGIN
         // ============================================
 
-        function cargarProyectos() {
-            // Si Firebase no está configurado, usar archivo local
-            if (FIREBASE_CONFIG.dbURL.includes('TU-PROYECTO')) {
-                setStatus('error', '⚠️ Configura Firebase para tiempo real');
-                cargarProyectosLocal();
+        async function login() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+
+            if (!username || !password) {
+                document.getElementById('error-msg').style.display = 'block';
                 return;
             }
 
-            setStatus('guardando', '🔄 Cargando datos...');
+            const hUser = await _sha256(username);
+            const hPass = await _sha256(password);
 
-            fetch(DB_URL + '.json?t=' + Date.now())
+            // Verificar usuario principal (hardcoded) + usuarios extras guardados
+            const usuariosExtras = JSON.parse(localStorage.getItem('_usuarios_extras') || '{}');
+            const esValido = (_h[hUser] && _h[hUser] === hPass) || 
+                             (usuariosExtras[hUser] && usuariosExtras[hUser] === hPass);
+
+            if (esValido) {
+                document.getElementById('login-container').style.display = 'none';
+                document.getElementById('main-container').classList.add('active');
+                document.getElementById('usuario-nombre').textContent = username;
+                localStorage.setItem('usuario', username);
+                document.getElementById('error-msg').style.display = 'none';
+                agregarLog(`✅ Inicio de sesión: ${username}`);
+                cargarProyectos();
+            } else {
+                document.getElementById('error-msg').style.display = 'block';
+            }
+        }
+
+        function logout() {
+            if (confirm('¿Estás seguro de cerrar sesión?')) {
+                localStorage.removeItem('usuario');
+                document.getElementById('login-container').style.display = 'flex';
+                document.getElementById('main-container').classList.remove('active');
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                document.getElementById('error-msg').style.display = 'none';
+                agregarLog('👋 Sesión cerrada');
+            }
+        }
+
+        window.onload = async function() {
+            // Siempre mostrar login primero
+            document.getElementById('login-container').style.display = 'flex';
+            document.getElementById('main-container').classList.remove('active');
+
+            const usuario = localStorage.getItem('usuario');
+            if (!usuario) return;
+
+            const hUser = await _sha256(usuario);
+            const usuariosExtras = JSON.parse(localStorage.getItem('_usuarios_extras') || '{}');
+            const esValido = _h[hUser] || usuariosExtras[hUser];
+
+            if (esValido) {
+                document.getElementById('login-container').style.display = 'none';
+                document.getElementById('main-container').classList.add('active');
+                document.getElementById('usuario-nombre').textContent = usuario;
+                cargarProyectos();
+            } else {
+                localStorage.removeItem('usuario');
+            }
+        };
+
+        // ============================================
+        // TABS
+        // ============================================
+
+        function cambiarTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tabName === 'historial') {
+                renderHistorial();
+            } else if (tabName === 'alertas') {
+                generarAlertas();
+            } else if (tabName === 'analytics') {
+                renderAnalytics();
+            } else if (tabName === 'usuarios') {
+                renderUsuarios();
+            }
+        }
+
+        // ============================================
+        // CARGAR PROYECTOS DESDE FIREBASE
+        // ============================================
+
+        function setStatus(tipo, mensaje) {
+            const indicator = document.getElementById('status-indicator');
+            const text = document.getElementById('status-text');
+            indicator.className = `status-indicator ${tipo}`;
+            text.textContent = mensaje;
+        }
+
+        function cargarProyectos() {
+            setStatus('guardando', '⏳ Cargando desde Firebase...');
+
+            fetch(DB_URL + '.json')
                 .then(r => {
                     if (!r.ok) throw new Error('HTTP ' + r.status);
                     return r.json();
                 })
                 .then(data => {
-                    if (!data) throw new Error('Base de datos vacía - inicializa los datos primero');
-                    proyectosData = data;
-                    renderProyectos(data);
-                    actualizarEstadisticas(data);
-                    setStatus('conectado', '🟢 Firebase conectado (tiempo real)');
+                    proyectosData = data || {};
+                    setStatus('conectado', '🟢 Conectado a Firebase');
+                    renderProyectos(proyectosData);
+                    actualizarEstadisticas(proyectosData);
+                    generarAlertas();
                 })
                 .catch(error => {
                     setStatus('error', '❌ Error: ' + error.message);
-                    console.warn('Firebase error, cargando local:', error);
-                    cargarProyectosLocal();
-                });
-        }
-
-        function cargarProyectosLocal() {
-            fetch('proyectos.json?t=' + Date.now())
-                .then(r => r.json())
-                .then(data => {
-                    proyectosData = data;
-                    renderProyectos(data);
-                    actualizarEstadisticas(data);
-                    if (FIREBASE_CONFIG.dbURL.includes('TU-PROYECTO')) {
-                        setStatus('error', '⚠️ Modo local - Configura Firebase para tiempo real');
-                    }
-                })
-                .catch(error => {
-                    setStatus('error', '❌ Error al cargar: ' + error.message);
+                    console.error('Error Firebase:', error);
+                    alert('⚠️ Error al conectar con Firebase.\nRevisa la consola para más detalles.');
                 });
         }
 
         // ============================================
-        // 🔥 GUARDAR EN FIREBASE (TIEMPO REAL)
+        // GUARDAR CAMBIOS EN FIREBASE
         // ============================================
+
         function guardarCambios() {
-            // Si Firebase no configurado, mostrar modal de copia manual (modo offline)
-            if (FIREBASE_CONFIG.dbURL.includes('TU-PROYECTO') || 
-                FIREBASE_CONFIG.secret.includes('TU_DATABASE_SECRET')) {
-                guardarCambiosManual();
-                return;
-            }
+            setStatus('guardando', '💾 Guardando en Firebase...');
 
-            setStatus('guardando', '💾 Guardando en tiempo real...');
-
-            fetch(DB_URL + '.json?auth=' + FIREBASE_CONFIG.secret, {
+            fetch(DB_URL + '.json', {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(proyectosData)
             })
             .then(r => {
-                if (!r.ok) throw new Error('HTTP ' + r.status + ' - Verifica el secret de Firebase');
+                if (!r.ok) throw new Error('HTTP ' + r.status);
                 return r.json();
             })
             .then(() => {
-                setStatus('conectado', '✅ Guardado! Sitios actualizados al instante');
+                setStatus('conectado', '✅ Guardado en Firebase');
                 renderProyectos(proyectosData);
                 actualizarEstadisticas(proyectosData);
-                // Volver a estado normal después de 3 segundos
-                setTimeout(() => setStatus('conectado', '🟢 Firebase conectado (tiempo real)'), 3000);
+                generarAlertas();
+                setTimeout(() => setStatus('conectado', '🟢 Conectado a Firebase'), 3000);
             })
             .catch(error => {
                 setStatus('error', '❌ Error al guardar: ' + error.message);
-                console.error('Error Firebase:', error);
-                // Fallback: ofrecer copia manual
-                if (confirm('Error al guardar en Firebase.\n¿Deseas copiar el JSON manualmente?')) {
-                    guardarCambiosManual();
-                }
+                console.error('Error:', error);
+                alert('⚠️ Error al guardar en Firebase.\nRevisa la consola para más detalles.');
             });
         }
 
-        function guardarCambiosManual() {
-            const jsonStr = JSON.stringify(proyectosData, null, 2);
-            const modal = document.createElement('div');
-            modal.className = 'modal active';
-            modal.innerHTML = `
-                <div class="modal-content" style="max-width: 700px;">
-                    <h2 class="modal-title">📝 Actualizar proyectos.json</h2>
-                    <p style="color: #ff006e; margin-bottom: 10px;">
-                        ⚠️ Firebase no configurado. Copia este JSON manualmente:
-                    </p>
-                    <p style="color: #888; margin-bottom: 20px;">
-                        Actualiza el archivo <strong>proyectos.json</strong> en tu repositorio de GitHub.
-                    </p>
-                    <textarea id="jsonOutput" style="width: 100%; height: 300px; background: #000; color: #0f0; 
-                        padding: 15px; border-radius: 8px; border: 1px solid #333; font-family: monospace; 
-                        font-size: 0.9rem;" readonly>${jsonStr}</textarea>
-                    <div class="modal-buttons" style="margin-top: 20px;">
-                        <button class="btn btn-tiempo" onclick="copiarJSON()">📋 Copiar</button>
-                        <button class="btn btn-editar" onclick="cerrarModalGuardar()">✓ Cerrar</button>
-                    </div>
-                    <p style="color: #666; font-size: 0.85rem; margin-top: 15px;">
-                        💡 Configura Firebase para guardar automáticamente en tiempo real
-                    </p>
-                </div>
-            `;
-            document.body.appendChild(modal);
-        }
-
         // ============================================
-        // RENDER Y ESTADÍSTICAS
+        // RENDER PROYECTOS
         // ============================================
 
         function renderProyectos(proyectos) {
@@ -801,17 +1359,26 @@
                 const hoy = new Date();
                 const diasRestantes = Math.ceil((expira - hoy) / (1000 * 60 * 60 * 24));
                 
+                const clases = ['proyecto'];
+                if (!proyecto.activo) clases.push('inactivo');
+                if (proyecto.mantenimiento) clases.push('mantenimiento');
+
                 const div = document.createElement('div');
-                div.className = `proyecto ${proyecto.activo ? 'activo' : 'inactivo'}`;
+                div.className = clases.join(' ');
+                div.setAttribute('data-id', id);
                 div.innerHTML = `
                     <div class="proyecto-header">
                         <div>
                             <div class="proyecto-titulo">${proyecto.nombre}</div>
                             <div style="color: #888; margin-top: 5px;">Cliente: ${proyecto.cliente} • ID: ${id}</div>
                         </div>
-                        <span class="badge ${proyecto.activo ? 'activo' : 'inactivo'}">
-                            ${proyecto.activo ? '✅ Activo' : '❌ Inactivo'}
-                        </span>
+                        <div class="badges">
+                            <span class="badge ${proyecto.activo ? 'activo' : 'inactivo'}">
+                                ${proyecto.activo ? '✅ Activo' : '❌ Inactivo'}
+                            </span>
+                            ${proyecto.mantenimiento ? '<span class="badge mantenimiento">🔧 Mantenimiento</span>' : ''}
+                            ${proyecto.pagado ? '<span class="badge pagado">💳 Pagado</span>' : ''}
+                        </div>
                     </div>
 
                     <div class="proyecto-info">
@@ -829,9 +1396,21 @@
                             <div class="info-label">📅 Expira</div>
                             <div class="info-value">
                                 ${proyecto.expira}
-                                <div style="font-size: 0.85rem; color: ${diasRestantes <= 7 ? 'var(--warning)' : '#888'};">
-                                    ${diasRestantes > 0 ? `(${diasRestantes} días restantes)` : '(Expirado)'}
+                                <div style="font-size: 0.85rem; color: ${diasRestantes <= 7 ? 'var(--warning)' : diasRestantes <= 0 ? 'var(--danger)' : '#888'};">
+                                    ${diasRestantes > 0 ? `(${diasRestantes} días)` : '(⚠️ Expirado)'}
                                 </div>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">🛒 Clicks Hoy / Total</div>
+                            <div class="info-value" style="color: var(--success);">
+                                ${(() => {
+                                    const hoy = new Date().toISOString().split('T')[0];
+                                    const dias = proyecto.clics_por_dia || {};
+                                    const hoyN = dias[hoy] || 0;
+                                    const total = Object.values(dias).reduce((a,b) => a+b, 0);
+                                    return `${hoyN} hoy / ${total} total`;
+                                })()}
                             </div>
                         </div>
                         <div class="info-item">
@@ -843,13 +1422,17 @@
                     <div class="controles">
                         <button class="btn ${proyecto.activo ? 'btn-desactivar' : 'btn-activar'}" 
                                 onclick="toggleActivacion('${id}', ${!proyecto.activo})">
-                            ${proyecto.activo ? '🔴 Desactivar Sitio' : '🟢 Activar Sitio'}
+                            ${proyecto.activo ? '🔴 Desactivar' : '🟢 Activar'}
+                        </button>
+                        <button class="btn btn-warning" 
+                                onclick="toggleMantenimiento('${id}', ${!proyecto.mantenimiento})">
+                            ${proyecto.mantenimiento ? '🔧 Quitar Mantenimiento' : '🔧 Mantenimiento'}
                         </button>
                         <button class="btn btn-tiempo" onclick="abrirModalTiempo('${id}')">
-                            ⏰ Agregar Tiempo
+                            ⏰ Gestionar Tiempo
                         </button>
                         <button class="btn btn-editar" onclick="togglePago('${id}', ${!proyecto.pagado})">
-                            ${proyecto.pagado ? '💳 Marcar No Pagado' : '💰 Marcar Pagado'}
+                            ${proyecto.pagado ? '💳 No Pagado' : '💰 Pagado'}
                         </button>
                         <a href="${proyecto.url_demo}" class="btn btn-editar" target="_blank" style="text-decoration: none;">
                             🌐 Ver Sitio
@@ -862,15 +1445,21 @@
 
         function actualizarEstadisticas(proyectos) {
             const total = Object.keys(proyectos).length;
-            let activos = 0, inactivos = 0, sinPagar = 0;
-            for (let p of Object.values(proyectos)) {
+            let activos = 0, inactivos = 0, sinPagar = 0, enMantenimiento = 0, totalClicks = 0;
+
+            for (let [id, p] of Object.entries(proyectos)) {
                 if (p.activo) activos++; else inactivos++;
                 if (!p.pagado) sinPagar++;
+                if (p.mantenimiento) enMantenimiento++;
+                if (p.clics_por_dia) totalClicks += Object.values(p.clics_por_dia).reduce((a,b) => a+b, 0);
             }
+
             document.getElementById('total-proyectos').textContent = total;
             document.getElementById('activos').textContent = activos;
             document.getElementById('inactivos').textContent = inactivos;
             document.getElementById('sin-pagar').textContent = sinPagar;
+            document.getElementById('en-mantenimiento').textContent = enMantenimiento;
+            document.getElementById('total-clicks').textContent = totalClicks;
         }
 
         // ============================================
@@ -880,9 +1469,20 @@
         function toggleActivacion(id, nuevoEstado) {
             const proyecto = proyectosData[id];
             const accion = nuevoEstado ? 'activar' : 'desactivar';
-            if (confirm(`¿Estás seguro de ${accion} el sitio "${proyecto.nombre}"?`)) {
+            if (confirm(`¿${accion.toUpperCase()} "${proyecto.nombre}"?`)) {
                 proyectosData[id].activo = nuevoEstado;
                 proyectosData[id].ultima_actualizacion = new Date().toISOString().split('T')[0];
+                agregarLog(`${nuevoEstado ? '✅' : '❌'} ${accion.toUpperCase()}: ${proyecto.nombre}`);
+                guardarCambios();
+            }
+        }
+
+        function toggleMantenimiento(id, nuevoEstado) {
+            const proyecto = proyectosData[id];
+            if (confirm(`¿${nuevoEstado ? 'Activar' : 'Desactivar'} mantenimiento en "${proyecto.nombre}"?`)) {
+                proyectosData[id].mantenimiento = nuevoEstado;
+                proyectosData[id].ultima_actualizacion = new Date().toISOString().split('T')[0];
+                agregarLog(`🔧 Mantenimiento ${nuevoEstado ? 'activado' : 'desactivado'}: ${proyecto.nombre}`);
                 guardarCambios();
             }
         }
@@ -890,6 +1490,7 @@
         function togglePago(id, nuevoPago) {
             proyectosData[id].pagado = nuevoPago;
             proyectosData[id].ultima_actualizacion = new Date().toISOString().split('T')[0];
+            agregarLog(`💰 ${nuevoPago ? 'Pagado' : 'No pagado'}: ${proyectosData[id].nombre}`);
             guardarCambios();
         }
 
@@ -911,32 +1512,526 @@
             fechaActual.setDate(fechaActual.getDate() + dias);
             proyectosData[proyectoActual].expira = fechaActual.toISOString().split('T')[0];
             proyectosData[proyectoActual].ultima_actualizacion = new Date().toISOString().split('T')[0];
+            
+            agregarLog(`⏰ ${dias > 0 ? 'Agregados' : 'Removidos'} ${Math.abs(dias)} días: ${proyecto.nombre}`);
+            
             cerrarModal();
             guardarCambios();
-            alert(`✅ Se agregaron ${dias} días a ${proyecto.nombre}\nNueva fecha: ${fechaActual.toLocaleDateString('es-ES')}`);
+            alert(`✅ ${dias > 0 ? '+' : ''}${dias} días → Nueva fecha: ${fechaActual.toLocaleDateString('es-ES')}`);
         }
 
         function agregarTiempoCustom() {
             const dias = parseInt(document.getElementById('diasCustom').value);
-            if (dias && dias > 0) {
+            if (dias && !isNaN(dias)) {
                 agregarTiempo(dias);
             } else {
-                alert('⚠️ Ingresa un número válido de días');
+                alert('⚠️ Ingresa un número válido');
             }
         }
 
-        function copiarJSON() {
-            const textarea = document.getElementById('jsonOutput');
-            textarea.select();
-            document.execCommand('copy');
-            alert('✅ JSON copiado al portapapeles');
+        // ============================================
+        // ACCIONES RÁPIDAS
+        // ============================================
+
+        function bloquearNoPagados() {
+            if (!confirm('¿Desactivar TODOS los sitios no pagados?')) return;
+            
+            let count = 0;
+            for (let [id, proyecto] of Object.entries(proyectosData)) {
+                if (!proyecto.pagado && proyecto.activo) {
+                    proyectosData[id].activo = false;
+                    proyectosData[id].ultima_actualizacion = new Date().toISOString().split('T')[0];
+                    count++;
+                }
+            }
+            
+            agregarLog(`🔒 Bloqueados ${count} sitios no pagados`);
+            guardarCambios();
+            alert(`✅ ${count} sitios bloqueados`);
         }
 
-        function cerrarModalGuardar() {
-            const modal = document.querySelector('.modal.active:last-of-type');
-            if (modal) modal.remove();
-            cargarProyectos();
+        function activarPagados() {
+            if (!confirm('¿Activar TODOS los sitios pagados?')) return;
+            
+            let count = 0;
+            for (let [id, proyecto] of Object.entries(proyectosData)) {
+                if (proyecto.pagado && !proyecto.activo) {
+                    proyectosData[id].activo = true;
+                    proyectosData[id].ultima_actualizacion = new Date().toISOString().split('T')[0];
+                    count++;
+                }
+            }
+            
+            agregarLog(`✅ Activados ${count} sitios pagados`);
+            guardarCambios();
+            alert(`✅ ${count} sitios activados`);
         }
+
+        function alertarProximosVencer() {
+            const hoy = new Date();
+            const proximos = [];
+            
+            for (let [id, proyecto] of Object.entries(proyectosData)) {
+                const expira = new Date(proyecto.expira);
+                const dias = Math.ceil((expira - hoy) / (1000 * 60 * 60 * 24));
+                if (dias <= 15 && dias >= 0) {
+                    proximos.push(`${proyecto.nombre}: ${dias} días`);
+                }
+            }
+            
+            if (proximos.length === 0) {
+                alert('✅ No hay proyectos próximos a vencer');
+            } else {
+                alert(`⚠️ Próximos a vencer:\n\n${proximos.join('\n')}`);
+            }
+        }
+
+        function exportarReporte() {
+            const reporte = {
+                fecha: new Date().toISOString(),
+                proyectos: proyectosData,
+                historial: activityLog
+            };
+            
+            const blob = new Blob([JSON.stringify(reporte, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `reporte-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            
+            agregarLog('📥 Reporte exportado');
+            alert('✅ Reporte exportado');
+        }
+
+        function limpiarHistorial() {
+            if (confirm('¿Limpiar historial de actividad?')) {
+                activityLog = [];
+                localStorage.setItem('activityLog', JSON.stringify(activityLog));
+                renderHistorial();
+                alert('✅ Historial limpiado');
+            }
+        }
+
+        // ============================================
+        // HISTORIAL
+        // ============================================
+
+        function agregarLog(accion) {
+            const log = {
+                fecha: new Date().toISOString(),
+                accion: accion,
+                usuario: document.getElementById('usuario-nombre').textContent
+            };
+            activityLog.unshift(log);
+            
+            if (activityLog.length > 100) {
+                activityLog = activityLog.slice(0, 100);
+            }
+            
+            localStorage.setItem('activityLog', JSON.stringify(activityLog));
+        }
+
+        function renderHistorial() {
+            const container = document.getElementById('log-container');
+            container.innerHTML = '';
+            
+            if (activityLog.length === 0) {
+                container.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">No hay actividad</p>';
+                return;
+            }
+            
+            activityLog.forEach(log => {
+                const div = document.createElement('div');
+                div.className = 'log-item';
+                div.innerHTML = `
+                    <div class="log-time">${new Date(log.fecha).toLocaleString('es-ES')}</div>
+                    <div class="log-action">${log.accion}</div>
+                    <div style="color: #666; font-size: 0.85rem; margin-top: 5px;">Por: ${log.usuario}</div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        // ============================================
+        // ALERTAS
+        // ============================================
+
+        function generarAlertas() {
+            const container = document.getElementById('alertas-container');
+            container.innerHTML = '';
+            
+            const hoy = new Date();
+            const alertas = [];
+            
+            for (let [id, proyecto] of Object.entries(proyectosData)) {
+                const expira = new Date(proyecto.expira);
+                const dias = Math.ceil((expira - hoy) / (1000 * 60 * 60 * 24));
+                
+                if (dias < 0 && proyecto.activo) {
+                    alertas.push({
+                        tipo: 'danger',
+                        icono: '🚨',
+                        mensaje: `${proyecto.nombre} EXPIRADO hace ${Math.abs(dias)} días`
+                    });
+                }
+                else if (dias <= 7 && dias >= 0) {
+                    alertas.push({
+                        tipo: 'warning',
+                        icono: '⚠️',
+                        mensaje: `${proyecto.nombre} vence en ${dias} días`
+                    });
+                }
+                
+                if (!proyecto.pagado && proyecto.activo) {
+                    alertas.push({
+                        tipo: 'warning',
+                        icono: '💰',
+                        mensaje: `${proyecto.nombre} activo pero NO pagado`
+                    });
+                }
+            }
+            
+            if (alertas.length === 0) {
+                container.innerHTML = '<p style="color: #888; text-align: center; padding: 20px;">✅ No hay alertas</p>';
+                return;
+            }
+            
+            alertas.forEach(alerta => {
+                container.innerHTML += `
+                    <div class="alert-item ${alerta.tipo}">
+                        <div class="alert-icon">${alerta.icono}</div>
+                        <div>${alerta.mensaje}</div>
+                    </div>
+                `;
+            });
+        }
+
+        // ============================================
+        // FILTROS
+        // ============================================
+
+        function filtrarProyectos() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const filtroEstado = document.getElementById('filter-estado').value;
+            
+            const proyectos = document.querySelectorAll('.proyecto');
+            
+            proyectos.forEach(div => {
+                const id = div.getAttribute('data-id');
+                const proyecto = proyectosData[id];
+                
+                const textoProyecto = `${proyecto.nombre} ${proyecto.cliente} ${id}`.toLowerCase();
+                const coincideBusqueda = textoProyecto.includes(searchTerm);
+                
+                let coincideFiltro = true;
+                if (filtroEstado === 'activos') coincideFiltro = proyecto.activo;
+                else if (filtroEstado === 'inactivos') coincideFiltro = !proyecto.activo;
+                else if (filtroEstado === 'pagados') coincideFiltro = proyecto.pagado;
+                else if (filtroEstado === 'no-pagados') coincideFiltro = !proyecto.pagado;
+                else if (filtroEstado === 'mantenimiento') coincideFiltro = proyecto.mantenimiento;
+                
+                div.style.display = (coincideBusqueda && coincideFiltro) ? 'block' : 'none';
+            });
+        }
+        // ============================================
+        // ANALYTICS - CLICKS DE COMPRA
+        // ============================================
+
+        function renderAnalytics() {
+            const container = document.getElementById('analytics-container');
+            container.innerHTML = '';
+
+            const entries = Object.entries(proyectosData);
+            if (entries.length === 0) {
+                container.innerHTML = '<p style="color:#888;text-align:center;padding:20px;">Sin proyectos</p>';
+                return;
+            }
+
+            const limiteDias = parseInt(document.getElementById('filtro-dias')?.value || 30);
+            const hoy = new Date();
+
+            // Ordenar proyectos por total de clicks (mayor a menor)
+            entries.sort((a, b) => {
+                const ta = Object.values(a[1].clics_por_dia || {}).reduce((s,v)=>s+v,0);
+                const tb = Object.values(b[1].clics_por_dia || {}).reduce((s,v)=>s+v,0);
+                return tb - ta;
+            });
+
+            entries.forEach(([id, proyecto]) => {
+                const diasData = proyecto.clics_por_dia || {};
+                const hoyStr = hoy.toISOString().split('T')[0];
+
+                // Filtrar días según el período seleccionado
+                let diasFiltrados = Object.entries(diasData);
+                if (limiteDias > 0) {
+                    const limite = new Date(hoy);
+                    limite.setDate(limite.getDate() - limiteDias);
+                    diasFiltrados = diasFiltrados.filter(([fecha]) => new Date(fecha) >= limite);
+                }
+
+                // Ordenar por fecha más reciente primero
+                diasFiltrados.sort((a, b) => b[0].localeCompare(a[0]));
+
+                const total = Object.values(diasData).reduce((s,v) => s+v, 0);
+                const hoyClicks = diasData[hoyStr] || 0;
+                const maxDia = Math.max(...diasFiltrados.map(([,v]) => v), 1);
+
+                const card = document.createElement('div');
+                card.className = 'analytics-proyecto abierto';
+                card.setAttribute('data-id', id);
+
+                let filasHTML = '';
+                if (diasFiltrados.length === 0) {
+                    filasHTML = `<tr><td colspan="3" class="sin-datos-dia">Sin clicks en este período</td></tr>`;
+                } else {
+                    diasFiltrados.forEach(([fecha, num]) => {
+                        const pct = Math.round((num / maxDia) * 100);
+                        const esHoy = fecha === hoyStr;
+                        filasHTML += `
+                            <tr>
+                                <td class="dia-fecha">${esHoy ? '⭐ Hoy' : formatearFecha(fecha)}</td>
+                                <td class="dia-barra-wrap">
+                                    <div class="dia-barra-bg">
+                                        <div class="dia-barra" style="width:${pct}%"></div>
+                                    </div>
+                                </td>
+                                <td class="dia-num">${num}</td>
+                            </tr>
+                        `;
+                    });
+                }
+
+                card.innerHTML = `
+                    <div class="analytics-header" onclick="toggleAnalytics('${id}')">
+                        <div class="analytics-proyecto-nombre">🌐 ${proyecto.nombre}</div>
+                        <div class="analytics-badges">
+                            <span class="badge-hoy">Hoy: ${hoyClicks}</span>
+                            <span class="badge-total">Total: ${total}</span>
+                            <button class="click-reset-btn" onclick="event.stopPropagation(); resetClicks('${id}')">🗑 Reset</button>
+                            <span class="toggle-arrow">▼</span>
+                        </div>
+                    </div>
+                    <div class="analytics-body">
+                        <table class="dias-tabla">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Clicks</th>
+                                    <th style="text-align:right;">Total</th>
+                                </tr>
+                            </thead>
+                            <tbody>${filasHTML}</tbody>
+                        </table>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function toggleAnalytics(id) {
+            const card = document.querySelector(`.analytics-proyecto[data-id="${id}"]`);
+            if (card) card.classList.toggle('abierto');
+            const body = card?.querySelector('.analytics-body');
+            if (body) body.style.display = card.classList.contains('abierto') ? 'block' : 'none';
+        }
+
+        function formatearFecha(fechaStr) {
+            const [y, m, d] = fechaStr.split('-');
+            const meses = ['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+            return `${d} ${meses[parseInt(m)-1]} ${y}`;
+        }
+
+        function resetClicks(id) {
+            const nombre = proyectosData[id].nombre;
+            if (!confirm(`¿Resetear TODOS los clicks de "${nombre}"?`)) return;
+            proyectosData[id].clics_por_dia = {};
+            proyectosData[id].clics_compra = 0;
+            proyectosData[id].ultima_actualizacion = new Date().toISOString().split('T')[0];
+            agregarLog(`🗑 Clicks reseteados: ${nombre}`);
+            guardarCambios();
+            renderAnalytics();
+            actualizarEstadisticas(proyectosData);
+            alert(`✅ Clicks de "${nombre}" reseteados`);
+        }
+
+        // ============================================
+        // GESTIÓN DE USUARIOS
+        // ============================================
+
+        async function agregarUsuario() {
+            const usu = document.getElementById('nuevo-usuario').value.trim();
+            const pass = document.getElementById('nueva-contrasena').value;
+            const pass2 = document.getElementById('repetir-contrasena').value;
+            const msg = document.getElementById('msg-usuarios');
+
+            const mostrarMsg = (texto, color) => {
+                msg.style.display = 'block';
+                msg.style.background = color === 'ok' ? 'rgba(0,255,65,0.15)' : 'rgba(255,0,110,0.15)';
+                msg.style.border = `1px solid ${color === 'ok' ? 'var(--success)' : 'var(--danger)'}`;
+                msg.style.color = color === 'ok' ? 'var(--success)' : 'var(--danger)';
+                msg.textContent = texto;
+                setTimeout(() => msg.style.display = 'none', 3000);
+            };
+
+            if (!usu || !pass) return mostrarMsg('⚠️ Completa todos los campos', 'err');
+            if (pass !== pass2) return mostrarMsg('❌ Las contraseñas no coinciden', 'err');
+            if (pass.length < 6) return mostrarMsg('❌ La contraseña debe tener al menos 6 caracteres', 'err');
+
+            const hUser = await _sha256(usu);
+            const hPass = await _sha256(pass);
+
+            // No permitir sobreescribir el admin principal
+            if (_h[hUser]) return mostrarMsg('⚠️ Ese usuario ya existe como admin principal', 'err');
+
+            const extras = JSON.parse(localStorage.getItem('_usuarios_extras') || '{}');
+            extras[hUser] = hPass;
+            localStorage.setItem('_usuarios_extras', JSON.stringify(extras));
+
+            // Guardar nombre visible (no la contraseña)
+            const nombres = JSON.parse(localStorage.getItem('_usuarios_nombres') || '{}');
+            nombres[hUser] = usu;
+            localStorage.setItem('_usuarios_nombres', JSON.stringify(nombres));
+
+            document.getElementById('nuevo-usuario').value = '';
+            document.getElementById('nueva-contrasena').value = '';
+            document.getElementById('repetir-contrasena').value = '';
+
+            mostrarMsg(`✅ Usuario "${usu}" guardado correctamente`, 'ok');
+            agregarLog(`👤 Nuevo usuario agregado: ${usu}`);
+            renderUsuarios();
+        }
+
+        function renderUsuarios() {
+            const lista = document.getElementById('lista-usuarios');
+            lista.innerHTML = '';
+
+            const extras = JSON.parse(localStorage.getItem('_usuarios_extras') || '{}');
+            const nombres = JSON.parse(localStorage.getItem('_usuarios_nombres') || '{}');
+
+            // Usuario principal (hardcoded)
+            const rowAdmin = document.createElement('div');
+            rowAdmin.className = 'click-row';
+            rowAdmin.style.cssText = 'display:flex; align-items:center; gap:15px; padding:16px; background:rgba(189,0,255,0.05); border:1px solid var(--gray); border-radius:10px; margin-bottom:10px;';
+            rowAdmin.innerHTML = `
+                <span style="font-size:1.3rem;">👑</span>
+                <div style="flex:1;">
+                    <div style="font-weight:700; color:#fff;">TORRES</div>
+                    <div style="color:#888; font-size:0.8rem;">Admin principal · Contraseña protegida</div>
+                </div>
+                <span style="padding:5px 12px; background:rgba(189,0,255,0.2); border:1px solid var(--info); color:var(--info); border-radius:6px; font-size:0.8rem;">🔒 Fijo</span>
+            `;
+            lista.appendChild(rowAdmin);
+
+            // Usuarios extras
+            const entradas = Object.entries(extras);
+            if (entradas.length === 0) {
+                const p = document.createElement('p');
+                p.style.cssText = 'color:#555; font-size:0.9rem; margin-top:15px;';
+                p.textContent = 'No hay usuarios adicionales aún.';
+                lista.appendChild(p);
+                return;
+            }
+
+            entradas.forEach(([hUser]) => {
+                const nombre = nombres[hUser] || '(usuario)';
+                const div = document.createElement('div');
+                div.style.cssText = 'display:flex; align-items:center; gap:15px; padding:16px; background:rgba(255,255,255,0.02); border:1px solid var(--gray); border-radius:10px; margin-bottom:10px;';
+                div.innerHTML = `
+                    <span style="font-size:1.3rem;">👤</span>
+                    <div style="flex:1;">
+                        <div style="font-weight:700; color:#fff;">${nombre}</div>
+                        <div style="color:#888; font-size:0.8rem;">Contraseña: ••••••• (protegida)</div>
+                    </div>
+                    <button onclick="eliminarUsuario('${hUser}', '${nombre}')" style="padding:6px 14px; background:rgba(255,0,110,0.15); border:1px solid var(--danger); color:var(--danger); border-radius:6px; cursor:pointer; font-weight:600; font-size:0.85rem;">
+                        🗑 Eliminar
+                    </button>
+                `;
+                lista.appendChild(div);
+            });
+        }
+
+        function eliminarUsuario(hUser, nombre) {
+            if (!confirm(`¿Eliminar el usuario "${nombre}"?`)) return;
+            const extras = JSON.parse(localStorage.getItem('_usuarios_extras') || '{}');
+            const nombres = JSON.parse(localStorage.getItem('_usuarios_nombres') || '{}');
+            delete extras[hUser];
+            delete nombres[hUser];
+            localStorage.setItem('_usuarios_extras', JSON.stringify(extras));
+            localStorage.setItem('_usuarios_nombres', JSON.stringify(nombres));
+            agregarLog(`🗑 Usuario eliminado: ${nombre}`);
+            renderUsuarios();
+        }
+
+        // ============================================
+        // GESTIÓN DE PROYECTOS - CREAR NUEVO
+        // ============================================
+
+        function abrirModalNuevoProyecto() {
+            // Fecha por defecto: 30 días desde hoy
+            const hoy = new Date();
+            hoy.setDate(hoy.getDate() + 30);
+            document.getElementById('np-expira').value = hoy.toISOString().split('T')[0];
+            document.getElementById('np-msg').style.display = 'none';
+            document.getElementById('modalNuevoProyecto').classList.add('active');
+        }
+
+        function cerrarModalNuevoProyecto() {
+            document.getElementById('modalNuevoProyecto').classList.remove('active');
+            ['np-id','np-nombre','np-cliente','np-url','np-precio'].forEach(id => {
+                document.getElementById(id).value = '';
+            });
+        }
+
+        function guardarNuevoProyecto() {
+            const id      = document.getElementById('np-id').value.trim().replace(/\s+/g, '_');
+            const nombre  = document.getElementById('np-nombre').value.trim();
+            const cliente = document.getElementById('np-cliente').value.trim();
+            const url     = document.getElementById('np-url').value.trim();
+            const precio  = document.getElementById('np-precio').value.trim();
+            const expira  = document.getElementById('np-expira').value;
+            const activo  = document.getElementById('np-activo').checked;
+            const pagado  = document.getElementById('np-pagado').checked;
+
+            const msg = document.getElementById('np-msg');
+            const mostrarMsg = (txt, tipo) => {
+                msg.style.display = 'block';
+                msg.style.background = tipo === 'ok' ? 'rgba(0,255,65,0.15)' : 'rgba(255,0,110,0.15)';
+                msg.style.border = `1px solid ${tipo === 'ok' ? 'var(--success)' : 'var(--danger)'}`;
+                msg.style.color = tipo === 'ok' ? 'var(--success)' : 'var(--danger)';
+                msg.textContent = txt;
+            };
+
+            if (!id || !nombre || !expira) {
+                return mostrarMsg('⚠️ ID, nombre y fecha de expiración son obligatorios', 'err');
+            }
+            if (proyectosData[id]) {
+                return mostrarMsg(`⚠️ Ya existe un proyecto con ID "${id}"`, 'err');
+            }
+
+            proyectosData[id] = {
+                nombre: nombre,
+                cliente: cliente || 'Sin especificar',
+                url_demo: url || '#',
+                precio: precio || 'Sin precio',
+                expira: expira,
+                activo: activo,
+                pagado: pagado,
+                mantenimiento: false,
+                ultima_actualizacion: new Date().toISOString().split('T')[0],
+                clics_compra: 0,
+                clics_por_dia: {}
+            };
+
+            mostrarMsg('💾 Guardando en Firebase...', 'ok');
+            agregarLog(`➕ Nuevo proyecto creado: ${nombre} (${id})`);
+
+            guardarCambios();
+            setTimeout(() => {
+                cerrarModalNuevoProyecto();
+            }, 1500);
+        }
+
     </script>
 </body>
 </html>
